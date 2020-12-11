@@ -1,0 +1,15 @@
+{
+    "name": "server",
+    "description": "Node.js EXPRESS EJS app",
+    "author": "Care We Are",
+    "version": "0.0.1",
+    "dependencies": {
+        "ejs": "*",
+        "express": "*",
+        "cookie-session": "*"
+    },
+    "engine": "node >= 12.0.0",
+    "scripts": {
+        "start": "node server"
+    }
+}
