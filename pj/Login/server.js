@@ -10,8 +10,7 @@ app.set('view engine','ejs');
 const SECRETKEY = 'I want to pass COMPS381F';
 
 const users = new Array(
-	{name: 'developer', password: 'developer'},
-	{name: 'guest', password: 'guest'}
+	{name: 'demo', password: ''}
 );
 
 app.set('view engine','ejs');
