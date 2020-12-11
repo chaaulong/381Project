@@ -24,10 +24,10 @@
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
       </form>
-      <% if (typeof(error) == "undefined" && error==true) { %>
+      <% if (locals.error==true) { %>
         <div class="alert alert-danger" role="alert"> Please enter username and password correctly! </div>
       <% } %>
-      <% if (typeof(existed) == "undefined" && existed==true) { %>
+      <% if (locals.existed==true) { %>
         <div class="alert alert-danger" role="alert"> User already existed! </div>
       <% } %>
 </div>

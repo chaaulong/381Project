@@ -33,23 +33,19 @@ app.get('/register', (req,res) => {
 });
 
 app.post('/register',function(req,res){
-    if (req.body.username=="" || req.body.password=="") {
+    if (req.body.username=="" || req.body.password=="" || req.body.passwordConfirm=="") {
         res.status(200).render('register',{error:true});
     } else {
-			  if (req.body.password!=req.body.passwordConfirm) {
-						res.status(200).render('register',{error:true});
-				} else {
-						users.forEach((user) => {
-            		if (user.name == req.body.username) {
-                		res.status(200).render('register',{existed:true});
-            		} else {
-                		req.session.authenticated = true;
-                		req.session.username = req.body.username;
-                		res.redirect('/');
-            		}
-        	});
-    		}
-			}
+				users.forEach((user) => {
+            if (user.name == req.body.username) {
+                res.status(200).render('register',{existed:true});
+            } else {
+              	req.session.authenticated = true;
+                req.session.username = req.body.username;
+              	res.redirect('/');
+          	}
+    	  });
+		}
 });
 
 app.get('/login', (req,res) => {
