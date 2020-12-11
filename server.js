@@ -1,58 +1,80 @@
 const express = require('express');
-const app = express();
 const session = require('cookie-session');
-
+const bodyParser = require('body-parser');
+const Sequelize = require('sequelize');
+const bcrypt = require('bcrypt');
+const app = express();
 const SECRETKEY = 'I want to pass COMPS381F';
 
+const users = new Array(
+	{name: 'demo', password: ''}
+);
+
+app.set('view engine','ejs');
+
 app.use(session({
-	name: 'shopcart',
-	keys: [SECRETKEY]
+  name: 'loginSession',
+  keys: [SECRETKEY]
 }));
 
-const products = [
-	{name: 'Apple iPad Pro', stock: 100, price: 7000, id:'001'},
-	{name: 'Apple iPhone 7', stock: 50, price: 7800, id:'002'},
-	{name: 'Apple Macbook', stock: 70, price: 11000, id: '003'}
-];
 
-app.set('view engine', 'ejs');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/',function(req,res) {
-	res.redirect('/read');
-});
-
-app.get('/read', function(req,res) {
-	res.render('list', {c: products});
-});
-
-app.get('/showdetails', (req,res) => {
-	let product2show = null;
-	if (req.query.id) {
-		products.forEach((product) => {
-			if (product.id == req.query.id) {
-				product2show = product
-			}
-		})
-		if (product2show) {
-			res.render('details', {c: product2show});
-		} else {
-			res.status(500).end(req.query.id + ' not found!');
-		}
+app.get('/', (req,res) => {
+	console.log(req.session);
+	if (!req.session.authenticated) {   
+		res.redirect('/login');
 	} else {
-		res.status(500).end('id missing!');
+		res.status(200).render('secrets',{name:req.session.username});
 	}
+	
+});
+app.get('/register', (req,res) => {
+	res.status(200).render('register',{});
 });
 
-app.get('/shoppingcart', (req,res) => {
-	res.end('coming soon!')
+app.post('/register',function(req,res){
+    var matched_users_promise = User.findAll({
+        where:  Sequelize.and(
+                {username: req.body.username}                
+            )
+    });
+    matched_users_promise.then(function(users){ 
+        if(users.length == 0){
+            const passwordHash = bcrypt.hashSync(req.body.password,10);
+            User.create({
+                username: req.body.username,
+                password: passwordHash
+            }).then(function(){
+               res.redirect('/');
+            });
+        }
+        else{
+            res.render('account/register',{errors: "Username already in user"});
+        }
+    })
 });
 
-app.get('/add2cart', (req,res) => {
-	res.end('coming soon!')
-})
+app.get('/login', (req,res) => {
+	res.status(200).render('login',{});
+});
 
-app.get('/emptycart', (req,res) => {
-	res.end('coming soon!')
-})
+app.post('/login', (req,res) => {
+	users.forEach((user) => {
+		if (user.name == req.body.name && user.password == req.body.password) {
+			
+			req.session.authenticated = true;        
+			req.session.username = req.body.name;	 	
+		}else{
+			res.redirect('/register');}
+	});
+	res.redirect('/');
+});
+
+app.get('/logout', (req,res) => {
+	req.session = null;  
+	res.redirect('/');
+});
 
 app.listen(process.env.PORT || 8099);
