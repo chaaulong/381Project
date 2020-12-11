@@ -1,8 +1,6 @@
 const express = require('express');
 const session = require('cookie-session');
 const bodyParser = require('body-parser');
-const Sequelize = require('sequelize');
-const bcrypt = require('bcrypt');
 const app = express();
 const SECRETKEY = 'I want to pass COMPS381F';
 
@@ -35,27 +33,23 @@ app.get('/register', (req,res) => {
 });
 
 app.post('/register',function(req,res){
-    var matched_users_promise = User.findAll({
-        where:  Sequelize.and(
-                {username: req.body.username}
-            )
-    });
-    matched_users_promise.then(function(users){
-        if(users.length == 0){
-            const passwordHash = bcrypt.hashSync(req.body.password,10);
-            User.create({
-                username: req.body.username,
-                password: passwordHash
-            }).then(function(){
-								req.session.authenticated = true;
-								req.session.username = username;
+    if(req.body.username=="" || req.body.password=="")
+    {
+        alert('Please enter username and password');
+        res.redirect('/register');
+    } else {
+        users.forEach((user) => {
+            if (user.name == req.body.username) {
+                alert('User already existed!');
+                res.redirect('/register');
+            } else {
+                req.session.authenticated = true;
+                req.session.username = req.body.username;
                 res.redirect('/');
-            });
-        }
-        else{
-            res.render('account/register',{errors: "Username already in user"});
-        }
-    })
+            }
+
+        })
+    }
 });
 
 app.get('/login', (req,res) => {
@@ -64,10 +58,10 @@ app.get('/login', (req,res) => {
 
 app.post('/login', (req,res) => {
 	users.forEach((user) => {
-		if (user.name == req.body.name && user.password == req.body.password) {
+		if (user.name == req.body.username && user.password == req.body.password) {
 
 			req.session.authenticated = true;
-			req.session.username = req.body.name;
+			req.session.username = req.body.username;
 		}else{
 			res.redirect('/register');}
 	});
