@@ -47,7 +47,7 @@ app.post('/register',function(req,res){
                 		req.session.username = req.body.username;
                 		res.redirect('/');
             		}
-        	})
+        	});
     		}
 			}
 });
