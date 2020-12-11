@@ -35,12 +35,12 @@ app.get('/register', (req,res) => {
 app.post('/register',function(req,res){
     if(req.body.username=="" || req.body.password=="")
     {
-        alert('Please enter username and password');
+        console.log('Please enter username and password');
         res.redirect('/register');
     } else {
         users.forEach((user) => {
             if (user.name == req.body.username) {
-                alert('User already existed!');
+                console.log('User already existed!');
                 res.redirect('/register');
             } else {
                 req.session.authenticated = true;
