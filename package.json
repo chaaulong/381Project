@@ -6,7 +6,9 @@
     "dependencies": {
         "ejs": "*",
         "express": "*",
-        "cookie-session": "*"
+        "cookie-session": "*",
+        "sequelize": "*",
+        "bcrypt": "*"
     },
     "engine": "node >= 12.0.0",
     "scripts": {
