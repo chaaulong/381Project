@@ -23,12 +23,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req,res) => {
 	console.log(req.session);
-	if (!req.session.authenticated) {   
+	if (!req.session.authenticated) {
 		res.redirect('/login');
 	} else {
 		res.status(200).render('secrets',{name:req.session.username});
 	}
-	
+
 });
 app.get('/register', (req,res) => {
 	res.status(200).render('register',{});
@@ -37,17 +37,19 @@ app.get('/register', (req,res) => {
 app.post('/register',function(req,res){
     var matched_users_promise = User.findAll({
         where:  Sequelize.and(
-                {username: req.body.username}                
+                {username: req.body.username}
             )
     });
-    matched_users_promise.then(function(users){ 
+    matched_users_promise.then(function(users){
         if(users.length == 0){
             const passwordHash = bcrypt.hashSync(req.body.password,10);
             User.create({
                 username: req.body.username,
                 password: passwordHash
             }).then(function(){
-               res.redirect('/');
+								req.session.authenticated = true;
+								req.session.username = username;
+                res.redirect('/');
             });
         }
         else{
@@ -63,9 +65,9 @@ app.get('/login', (req,res) => {
 app.post('/login', (req,res) => {
 	users.forEach((user) => {
 		if (user.name == req.body.name && user.password == req.body.password) {
-			
-			req.session.authenticated = true;        
-			req.session.username = req.body.name;	 	
+
+			req.session.authenticated = true;
+			req.session.username = req.body.name;
 		}else{
 			res.redirect('/register');}
 	});
@@ -73,7 +75,7 @@ app.post('/login', (req,res) => {
 });
 
 app.get('/logout', (req,res) => {
-	req.session = null;  
+	req.session = null;
 	res.redirect('/');
 });
 
