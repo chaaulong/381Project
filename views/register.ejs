@@ -10,8 +10,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <% error=false %>
-  <% existed=false %>
 
 </head>
 
@@ -26,12 +24,6 @@
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
       </form>
-      <% if (error) { %>
-        <div class="alert alert-danger" role="alert"> Please enter username and password correctly! </div>
-      <% } %>
-      <% if (existed) { %>
-        <div class="alert alert-danger" role="alert"> User already existed! </div>
-      <% } %>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>

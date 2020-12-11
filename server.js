@@ -34,14 +34,14 @@ app.get('/register', (req,res) => {
 
 app.post('/register',function(req,res){
     if (req.body.username=="" || req.body.password=="") {
-        res.status(200).render('register',{error: true});
+        res.status(200).render('register');
     } else {
 			  if (req.body.password!=req.body.passwordConfirm) {
-						res.status(200).render('register',{error: true});
+						res.status(200).render('register');
 				} else {
 						users.forEach((user) => {
             		if (user.name == req.body.username) {
-                		res.status(200).render('register',{existed: true});
+                		res.status(200).render('register');
             		} else {
                 		req.session.authenticated = true;
                 		req.session.username = req.body.username;
