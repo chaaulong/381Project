@@ -3,12 +3,14 @@ const session = require('cookie-session');
 const bodyParser = require('body-parser');
 const app = express();
 const SECRETKEY = 'I want to pass COMPS381F';
+const db = require('./restaurants');
 
 const users = new Array(
 	{name: 'demo', password: ''}
 );
 
 app.set('view engine','ejs');
+app.use ('/restaurants', db);
 
 app.use(session({
   name: 'loginSession',
