@@ -3,6 +3,8 @@ const ObjectID = require('mongodb').ObjectID;
 const assert = require('assert');
 const http = require('http');
 const url = require('url');
+const express =require('express');
+const Router = express.Router();
  
 const mongourl = 'mongodb+srv://dt:s12166654@cluster0.yrpcm.mongodb.net/restaurant?retryWrites=true&w=majority';
 const dbName = 'restaurant';
@@ -142,4 +144,4 @@ const server = http.createServer((req,res) => {
     }
 })
  
-server.listen(process.env.PORT || 8099);
+module.exports = Router;
