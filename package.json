@@ -9,7 +9,8 @@
         "cookie-session": "*",
         "sequelize": "*",
         "bcrypt": "*",
-        "body-parser": "*"
+        "body-parser": "*",
+        "mongodb": "*"
     },
     "engine": "node >= 12.0.0",
     "scripts": {
