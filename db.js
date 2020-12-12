@@ -19,6 +19,49 @@ const findDocument = (db, criteria, callback) => {
     });
 }
 
+const updateDocument = (db, criteria, callback) => {
+
+    /*let cursor = db.collection('restaurants').find(criteria);
+    console.log(`updateDocument: ${JSON.stringify(criteria)}`);
+    cursor.toArray((err,docs) => {
+        assert.equal(err,null);
+        console.log(`findDocument: ${docs.length}`);
+        callback(docs);
+    });*/
+}
+
+
+const rateDocument = (db, criteria, callback) => {
+    /*let cursor = db.collection('restaurants').find(criteria);
+    console.log(`findDocument: ${JSON.stringify(criteria)}`);
+    cursor.toArray((err,docs) => {
+        assert.equal(err,null);
+        console.log(`findDocument: ${docs.length}`);
+        callback(docs);
+    });*/
+}
+
+const displayDocument = (db, criteria, callback) => {
+    /*let cursor = db.collection('restaurants').find(criteria);
+    console.log(`findDocument: ${JSON.stringify(criteria)}`);
+    cursor.toArray((err,docs) => {
+        assert.equal(err,null);
+        console.log(`findDocument: ${docs.length}`);
+        callback(docs);
+    });*/
+}
+
+
+const deleteDocument = (db, criteria, callback) => {
+      
+     db.collection('restaurants').deleteMany(criteria, (err,results) => {
+        assert.equal(err,null);
+        console.log('deleteMany was successful');
+        callback(results);
+    });
+}
+
+
 const handle_Find = (res, criteria) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
@@ -29,12 +72,7 @@ const handle_Find = (res, criteria) => {
         findDocument(db, criteria, (docs) => {
             client.close();
             console.log("Closed DB connection");
-            res.writeHead(200, {"content-type":"text/html"});
-            res.write(`<html><body><H2>Restaurant (${docs.length})</H2><ul>`);
-            for (var doc of docs) {
-                res.write(`<li>Restaurant Name: <a href="/details?_name=${doc._name}">${doc.restaurant_name}</a></li>`);
-            }
-            res.end('</ul></body></html>');
+            res.status(200).render('list',{nRestaurants: docs.length, restaurants: docs});
         });
     });
 }
@@ -52,15 +90,8 @@ const handle_Details = (res, criteria) => {
         findDocument(db, DOCID, (docs) => {  
             client.close();
             console.log("Closed DB connection");
-            res.writeHead(200, {"content-type":"text/html"});
-            res.write('<html><body><ul>');
+	    res.status(200).render('details', {restaurant: docs[0]});
             
-            res.write(`<H2>Restaurant Details</H2><hr>`)
-            res.write(`<p>Restaurant ID: <b>${docs[0].restaurant_id}</b></p>`);
-            res.write(`<p>Mobile: <b>${docs[0].mobile}</b></p>`)
-            res.write(`<a href="/edit?_id=${docs[0]._id}">edit</a><br><br>`)
-            res.write(`<a href="/find">back<a>`);
-            res.end('</body></html>');
         });
     });
 }
@@ -78,19 +109,13 @@ const handle_Edit = (res, criteria) => {
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
-            res.writeHead(200, {"content-type":"text/html"});
-            res.write('<html><body>');
-            res.write('<form action="/update" method=GET>');
-            res.write(`Restaurant ID: <input name="restaurant_id" value=${docs[0].restaurant_id}><br>`);
-            res.write(`Mobile: <input name="mobile" value=${docs[0].mobile} /><br>`);
-            res.write(`<input type="hidden" name="_id" value=${docs[0]._id}>`)
-            res.write(`<input type="submit" value="update">`);
-            res.end('</form></body></html>');
+	    res.status(200).render('edit',{restaurant: docs[0]})
+            
         });
     });
 }
 
-const handle_Update = (res, criteria) => {
+/*const handle_Update = (res, criteria) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
         assert.equal(null, err);
@@ -110,38 +135,35 @@ const handle_Update = (res, criteria) => {
             (err, results) => {
                 client.close();
                 assert.equal(err, null);
-                res.writeHead(200, {"content-type":"text/html"});
-                res.write(`<html><body><p>Updated ${results.result.nModified} document(s)<p><br>`);
-                res.end('<a href="/">back</a></body></html>');
+                updateDoc['photo'] = new Buffer.from(data).toString('base64');
+                updateDocument(DOCID, updateDoc, (results) => {
+                    res.status(200).render('info', {message: `Updated ${results.result.nModified} document(s)`})
             }
         );
     });
-}
+}*/
 
-const server = http.createServer((req,res) => {
-    var parsedURL = url.parse(req.url, true);
- 
-    switch(parsedURL.pathname) {
-        case '/':
-        case '/find':
-            handle_Find(res, parsedURL.query);
-            break;
-        case '/details':
-            handle_Details(res, parsedURL.query);
-            break;
-        case '/edit':
-            handle_Edit(res, parsedURL.query);
-            break;estaurant
-        case '/update':
-            handle_Update(res, parsedURL.query);
-            break;
-	case '/delete':
-		    handle_Delete(res, parsedURL.query);
-		    break;
-        default:
-            res.writeHead(404, {'Content-Type': 'text/plain'});
-            res.end(`${parsedURL.pathname} - Unknown request!`);
-    }
+Router.get('/', (req,res) => {
+    res.redirect('/find');
+})
+Router.get('/find', (req,res) => {
+    handle_Find(res, req.query.docs);
+})
+
+Router.get('/details', (req,res) => {
+    handle_Details(res, req.query);
+})
+
+Router.get('/edit', (req,res) => {
+    handle_Edit(res, req.query);
+})
+
+Router.post('/update', (req,res) => {
+    handle_Update(req, res, req.query);
+})
+
+Router.get('/*', (req,res) => {
+    res.status(404).render('info', {message: `${req.path} - Unknown request!` });
 })
  
 module.exports = Router;
