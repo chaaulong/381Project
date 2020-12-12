@@ -25,7 +25,7 @@
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
       </form>
       <% if (locals.error==true) { %>
-        <div class="alert alert-danger" role="alert"> Please enter username and password correctly! </div>
+        <div class="alert alert-danger" role="alert"> Please enter username, password and confirm password correctly! </div>
       <% } %>
       <% if (locals.existed==true) { %>
         <div class="alert alert-danger" role="alert"> User already existed! </div>
