@@ -10,7 +10,7 @@ const users = new Array(
 );
 
 app.set('view engine','ejs');
-app.use ('/restaurants', db);
+app.use('/restaurants', db);
 
 app.use(session({
   name: 'loginSession',
