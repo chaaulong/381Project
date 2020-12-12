@@ -41,6 +41,32 @@ const updateDocument = (criteria, updateDoc, callback) => {
         );
     });
 }
+const removeDocument = (criteria,callback) => {
+    const client = new MongoClient(mongourl);
+    client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+
+         db.collection('restaurants').remove(criteria,
+ 
+            (err, results) => {
+                client.close();
+                assert.equal(err, null);
+                callback(results);
+            }
+        );
+    });
+}
+const handle_Remove = (res, criteria) => {
+        var DOCID = {};
+        DOCID['_id'] = ObjectID(criteria._id)
+                removeDocument(DOCID,(results) => {
+		res.status(200).render('delete',{message:'Delete was successful'})
+ 
+                });
+        } 
+
 const handle_Find = (res, criteria) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
@@ -87,6 +113,7 @@ const handle_Edit = (res, criteria) => {
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
+		
 	    res.status(200).render('edit',{restaurants:docs[0]});
         });
     });
@@ -133,6 +160,9 @@ router.get('/edit',(req,res)=>{
 	})
 router.post('/update',(req,res)=>{
 	handle_Update(req, res, req.query);
+	})
+router.get('/delete',(req,res)=>{
+	handle_Remove(res, req.query);
 	})
 
 
