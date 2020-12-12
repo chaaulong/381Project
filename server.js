@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 const app = express();
+//const router = express.Router();
+const db = require('./db');
 const SECRETKEY = 'I want to pass COMPS381F';
 
 const users = new Array(
@@ -11,6 +13,7 @@ const users = new Array(
 );
 
 app.set('view engine','ejs');
+app.use ('/restaurants', db);
 
 app.use(session({
   name: 'loginSession',
