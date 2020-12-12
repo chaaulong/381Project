@@ -3,7 +3,7 @@ const session = require('cookie-session');
 const bodyParser = require('body-parser');
 const app = express();
 const SECRETKEY = 'I want to pass COMPS381F';
-//const db = require('./db');
+const db = require('./db');
 
 const users = new Array(
 	{name: 'demo', password: ''}
