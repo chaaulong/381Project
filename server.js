@@ -26,7 +26,7 @@ app.get('/', (req,res) => {
 	if (!req.session.authenticated) {
 		res.redirect('/login');
 	} else {
-		res.status(200).render('index',{name:req.session.username});
+		res.redirect('/index');
 	}
 
 });
