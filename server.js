@@ -1,12 +1,9 @@
 const express = require('express');
 const session = require('cookie-session');
 const bodyParser = require('body-parser');
-const Sequelize = require('sequelize');
-const bcrypt = require('bcrypt');
 const app = express();
-//const router = express.Router();
-const db = require('./db');
 const SECRETKEY = 'I want to pass COMPS381F';
+const db = require('./db');
 
 const users = new Array(
 	{name: 'demo', password: ''}
@@ -26,37 +23,33 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req,res) => {
 	console.log(req.session);
-	if (!req.session.authenticated) {   
+	if (!req.session.authenticated) {
 		res.redirect('/login');
 	} else {
 		res.status(200).render('secrets',{name:req.session.username});
 	}
-	
+
 });
 app.get('/register', (req,res) => {
 	res.status(200).render('register',{});
 });
 
 app.post('/register',function(req,res){
-    var matched_users_promise = User.findAll({
-        where:  Sequelize.and(
-                {username: req.body.username}                
-            )
-    });
-    matched_users_promise.then(function(users){ 
-        if(users.length == 0){
-            const passwordHash = bcrypt.hashSync(req.body.password,10);
-            User.create({
-                username: req.body.username,
-                password: passwordHash
-            }).then(function(){
-               res.redirect('/');
-            });
-        }
-        else{
-            res.render('account/register',{errors: "Username already in user"});
-        }
-    })
+    if (req.body.username=="" || req.body.password=="" || req.body.passwordConfirm=="") {
+        res.status(200).render('register',{error:true});
+    } else if (req.body.password!=req.body.passwordConfirm) {
+				res.status(200).render('register',{error:true});
+		} else {
+				users.forEach((user) => {
+            if (user.name == req.body.username) {
+                res.status(200).render('register',{existed:true});
+            } else {
+              	req.session.authenticated = true;
+                req.session.username = req.body.username;
+              	res.redirect('/');
+          	}
+    	  });
+		}
 });
 
 app.get('/login', (req,res) => {
@@ -65,10 +58,10 @@ app.get('/login', (req,res) => {
 
 app.post('/login', (req,res) => {
 	users.forEach((user) => {
-		if (user.name == req.body.name && user.password == req.body.password) {
-			
-			req.session.authenticated = true;        
-			req.session.username = req.body.name;	 	
+		if (user.name == req.body.username && user.password == req.body.password) {
+
+			req.session.authenticated = true;
+			req.session.username = req.body.username;
 		}else{
 			res.redirect('/register');}
 	});
@@ -76,7 +69,7 @@ app.post('/login', (req,res) => {
 });
 
 app.get('/logout', (req,res) => {
-	req.session = null;  
+	req.session = null;
 	res.redirect('/');
 });
 
