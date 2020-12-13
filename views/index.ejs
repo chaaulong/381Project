@@ -35,14 +35,14 @@
       </div>
       <div class="col-xs-6"></div>
       <div class="col-xs-3">
-	      <a href="/search" class="btn btn-primary" role="button">Search restaurant</a>
+	<a href="/search" class="btn btn-primary" role="button">Search restaurant</a>
       </div>
     </div>
     <hr>
 		<table>
 		    <% for(var i=0; i < locals.count; i++) { %>
           <tr>
-            <td><a href="/display?id=<%= restaurants[i].restaurant_id %>"><%= i+1 %>. <%= restaurants[i].name %></a></td>
+            <td><a href="/display?_id=<%= restaurants[i]._id %>"><%= i+1 %>. <%= restaurants[i].name %></a></td>
           </tr>
         <% } %>
     </table>

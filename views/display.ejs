@@ -18,8 +18,13 @@
 
 <div class="container">
 		<h1><%= restaurant.name %></h1>
-    <img src=""></img>
+    <% if (restaurant.photo) { %>
+            <img src="data:image/jpg;base64, <%= restaurant.photo %>"><br>
+    <% } %>
     <div class="col">
+      <div class="row">
+        <p>Restaurant ID: <%= restaurant.restaurant_id %></p>
+		  </div>
       <div class="row">
         <p>Borough: <%= restaurant.borough %></p>
 		  </div>
@@ -27,39 +32,40 @@
         <p>Cuisine: <%= restaurant.cuisine %></p>
 		  </div>
       <div class="row">
-        <p>Street: <%= restaurant.street %></p>
+        <p>Street: <%= restaurant.address.street %></p>
 		  </div>
       <div class="row">
-        <p>Building: <%= restaurant.building %></p>
+        <p>Building: <%= restaurant.address.building %></p>
       </div>
       <div class="row">
         <p>Zipcode: <%= restaurant.zipcode %></p>
       </div>
       <div class="row">
-        <p>GPS: <%= restaurant.coord %></p>
+        <p>GPS: <%=JSON.stringify(restaurant.address.coord)%></p>
       </div>
-      <div class="row">
-        <% for(var i=0; i < restaurant.grades.length; i++) { %>
-          <tr>
-            <td><%= restaurant.grades[i].score %> (<%= restaurant.grades[i].user %>)</td>
-          </tr>
-        <% } %>
-      </div>
+      <p>Rating:</p>
+	<ol type="1">
+	<% for (var r of (restaurant.grades)){ %>
+	<li> <%=JSON.stringify(r.score)%>(<%=JSON.stringify(r.grade)%>)</li>
+	<%}%>
+	</ol>
       <div class="row">
         <p>Created by: <%= restaurant.owner %></p>
       </div>
-      <div class="row">
-        <a href="gmap?lat=<%= restaurant.coord[0] %>&lon=<%= restaurant.coord[1] %>&title=<%= restaurant.name %>">Map</a>
-      </div>
+        <% if (restaurant.address.coord) { %>
+          <div class="row">
+            <a href="gmap?lat=<%= restaurant.address.coord[0] %>&lon=<%=restaurant.address.coord[1]%>&title=<%=restaurant.name%>">Map</a><br>
+          </div>
+        <% } %>
       <div class="row">
         <div class="col">
-          <a class="btn btn-primary" href="/rate?id=<%= restaurant.restaurant_id %>&name=<%= restaurant.name %>" role="button">Rate</a>
+          <a class="btn btn-primary" href="/rate?_id=<%= restaurant._id %>&name=<%= restaurant.name %>" role="button">Rate</a>
         </div>
         <div class="col">
-          <a class="btn btn-primary" href="/edit?id=<%= restaurant.restaurant_id %>" role="button">Edit</a>
+          <a class="btn btn-primary" href="/edit?_id=<%= restaurant._id %>" role="button">Edit</a>
         </div>
         <div class="col">
-          <a class="btn btn-primary" href="/delete?id=<%= restaurant.restaurant_id %>" role="button">Delete</a>
+          <a class="btn btn-primary" href="/delete?_id=<%= restaurant._id %>" role="button">Delete</a>
         </div>
         <div class="col">
           <a class="btn btn-primary" href="/" role="button">Back</a>

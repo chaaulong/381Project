@@ -8,7 +8,6 @@ const express = require('express');
 const router = express.Router();
 const session = require('cookie-session');
 const assert = require('assert');
-//const db = require('./db');
 const app = express();
 
 const findDocument = (db, criteria, callback) => {
@@ -44,6 +43,5 @@ router.get('/', (req,res) => {
 		handle_Find(req, res, req.query.docs);
 	}
 });
-
 
 module.exports = router;

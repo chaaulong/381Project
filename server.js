@@ -23,8 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', index);
 
-app.get('/db', db);
-
 app.get('/register', register);
 
 app.post('/register', register);
@@ -34,5 +32,21 @@ app.get('/login', login);
 app.post('/login', login);
 
 app.get('/logout', logout);
+
+app.get('/display', db);
+
+app.get('/create', db);
+
+app.get('/search', db);
+
+app.get('/edit', db);
+
+app.get('/rate', db);
+
+app.get('/delete', db);
+
+app.get('/gmap', db);
+
+app.post('/update', db);
 
 app.listen(process.env.PORT || 8099);

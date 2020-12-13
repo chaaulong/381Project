@@ -10,7 +10,8 @@
         "sequelize": "*",
         "bcrypt": "*",
         "body-parser": "*",
-        "mongodb": "*"
+        "mongodb": "*",
+        "express-formidable": "*"
     },
     "engine": "node >= 12.0.0",
     "scripts": {
