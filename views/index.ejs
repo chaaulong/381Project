@@ -42,7 +42,7 @@
 		<table>
 		    <% for(var i=0; i < locals.count; i++) { %>
           <tr>
-            <td><a href="/display?_id=<%= restaurants[i]._id %>"><%= i+1 %>. <%= restaurants[i].name %></a></td>
+            <td><%= i+1 %>. <a href="/display?_id=<%= restaurants[i]._id %>"><%= restaurants[i].name %></a></td>
           </tr>
         <% } %>
     </table>
