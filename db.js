@@ -143,14 +143,17 @@ const handle_Edit = (res, criteria) => {
     });
 }*/
 
-router.get('/', (req,res) => {
-    res.redirect('/find');
+
+Router.get('/', (req,res) => {
+    res.redirect('/list');
 })
-router.get('/find', (req,res) => {
+
+Router.get('/find', (req,res) => {
     handle_Find(res, req.query.docs);
 })
 
-router.get('/details', (req,res) => {
+Router.get('/details', (req,res) => {
+
     handle_Details(res, req.query);
 })
 

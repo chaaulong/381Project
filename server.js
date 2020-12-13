@@ -4,10 +4,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const SECRETKEY = 'I want to pass COMPS381F';
 const db = require('./db');
+const login = require('./login');
+const register = require('./register');
 
-const users = new Array(
-	{name: 'demo', password: ''}
-);
 
 app.set('view engine','ejs');
 app.use('/index', db);
@@ -30,43 +29,14 @@ app.get('/', (req,res) => {
 	}
 
 });
-app.get('/register', (req,res) => {
-	res.status(200).render('register',{});
-});
 
-app.post('/register',function(req,res){
-    if (req.body.username=="" || req.body.password=="" || req.body.passwordConfirm=="") {
-        res.status(200).render('register',{error:true});
-    } else if (req.body.password!=req.body.passwordConfirm) {
-				res.status(200).render('register',{error:true});
-		} else {
-				users.forEach((user) => {
-            if (user.name == req.body.username) {
-                res.status(200).render('register',{existed:true});
-            } else {
-              	req.session.authenticated = true;
-                req.session.username = req.body.username;
-              	res.redirect('/');
-          	}
-    	  });
-		}
-});
+app.get('/register', register);
 
-app.get('/login', (req,res) => {
-	res.status(200).render('login',{});
-});
+app.post('/register', register);
 
-app.post('/login', (req,res) => {
-	users.forEach((user) => {
-		if (user.name == req.body.username && user.password == req.body.password) {
+app.get('/login', login);
 
-			req.session.authenticated = true;
-			req.session.username = req.body.username;
-		}else{
-			res.redirect('/register');}
-	});
-	res.redirect('/');
-});
+app.post('/login', login);
 
 app.get('/logout', (req,res) => {
 	req.session = null;
