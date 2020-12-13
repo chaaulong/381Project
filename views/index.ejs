@@ -30,18 +30,19 @@
 	<h1>Restaurants</h1>
 	<h2>Showing <%= locals.count %> documents</h2>
     <div class="row">
-      <div class="col-md-auto">
-        <a href="/create" class="btn btn-lg btn-primary" role="button">Create new restaurant</a>
+      <div class="col-xs-3">
+        <a href="/create" class="btn btn-primary" role="button">Create new restaurant</a>
       </div>
-      <div class="col-md-auto">
-	      <a href="/search" class="btn btn-lg btn-primary" role="button">Search restaurant</a>
+      <div class="col-xs-6"></div>
+      <div class="col-xs-3">
+	      <a href="/search" class="btn btn-primary" role="button">Search restaurant</a>
       </div>
-	  </div>
+    </div>
     <hr>
 		<table>
 		    <% for(var i=0; i < locals.count; i++) { %>
           <tr>
-            <td><a href="/display?id=<%= restaurants[i].restaurant_id %>"><%= restaurants[i].name %></a></td>
+            <td><a href="/display?id=<%= restaurants[i].restaurant_id %>"><%= i+1 %>. <%= restaurants[i].name %></a></td>
           </tr>
         <% } %>
     </table>
@@ -61,6 +62,7 @@ h1, h2{
 .container{
   width:50%
 }
+
 </style>
 
 </body>
