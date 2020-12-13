@@ -11,7 +11,6 @@ const logout = require('./logout');
 
 
 app.set('view engine','ejs');
-app.use('/index', db);
 
 app.use(session({
   name: 'loginSession',
@@ -23,6 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', index);
+
+app.get('/db', db);
 
 app.get('/register', register);
 
