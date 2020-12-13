@@ -38,15 +38,13 @@
       </div>
 	  </div>
     <hr>
-	<div class ="row">
-		    <table>
-		      <% for(var i=0; i < locals.count; i++) { %>
-			<tr>
-			  <td><a href="/display?id=<%= restaurants[i].restaurant_id %>"><%= restaurants[i].name %></a></td>
-			</tr>
-		      <% } %>
-		    </table>
-	</div>
+		<table>
+		    <% for(var i=0; i < locals.count; i++) { %>
+          <tr>
+            <td><a href="/display?id=<%= restaurants[i].restaurant_id %>"><%= restaurants[i].name %></a></td>
+          </tr>
+          <% } %>
+    </table>
 </div>
 
 
