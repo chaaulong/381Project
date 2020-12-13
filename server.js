@@ -6,6 +6,8 @@ const SECRETKEY = 'I want to pass COMPS381F';
 const db = require('./db');
 const login = require('./login');
 const register = require('./register');
+const index = require('./index');
+const logout = require('./logout');
 
 
 app.set('view engine','ejs');
@@ -20,15 +22,7 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/', (req,res) => {
-	console.log(req.session);
-	if (!req.session.authenticated) {
-		res.redirect('/login');
-	} else {
-		res.status(200).render('index',{name:req.session.username});
-	}
-
-});
+app.get('/', index);
 
 app.get('/register', register);
 
@@ -38,9 +32,6 @@ app.get('/login', login);
 
 app.post('/login', login);
 
-app.get('/logout', (req,res) => {
-	req.session = null;
-	res.redirect('/');
-});
+app.get('/logout', logout);
 
 app.listen(process.env.PORT || 8099);
