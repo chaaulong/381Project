@@ -11,6 +11,16 @@ const assert = require('assert');
 const db = require('./db');
 const app = express();
 
+const findDocument = (db, criteria, callback) => {
+    let cursor = db.collection('restaurants').find(criteria);
+    console.log(`findDocument: ${JSON.stringify(criteria)}`);
+    cursor.toArray((err,docs) => {
+        assert.equal(err,null);
+        console.log(`findDocument: ${docs.length}`);
+        callback(docs);
+    });
+}
+
 const handle_Find = (res, req, criteria) => {
 	const client = new MongoClient(mongourl);
 	client.connect((err) => {
@@ -24,16 +34,6 @@ const handle_Find = (res, req, criteria) => {
             	res.status(200).render('index',{count: docs.length,  restaurants: docs});
 	});
         });
-}
-
-const findDocument = (db, criteria, callback) => {
-    let cursor = db.collection('restaurants').find(criteria);
-    console.log(`findDocument: ${JSON.stringify(criteria)}`);
-    cursor.toArray((err,docs) => {
-        assert.equal(err,null);
-        console.log(`findDocument: ${docs.length}`);
-        callback(docs);
-    });
 }
 
 router.get('/', (req,res) => {
