@@ -1,14 +1,14 @@
 <html>
     <body>
         <form action="update" method="POST" enctype="multipart/form-data">
-            	Name: <input name="name" value=<%= restaurants.name %>><br>
-		borough: <input name="borough" value=<%= restaurants.borough %>><br>
-             	Cuisine: <input name="cuisine" value=<%= restaurants.cuisine %> /><br>
-		Street: <input name="street" value=<%= restaurants.address.street %> /><br>
-		Building: <input name="building" value=<%= restaurants.address.building %> /><br>
-		Zipcode: <input name="zipcode" value=<%= restaurants.address.zipcode %> /><br>
-		GPS Coordinates (lon.): <input name="gpslon" value=<%= restaurants.address.coord[0] %> /><br>
-		GPS Coordinates (lat.): <input name="gpslat" value=<%= restaurants.address.coord[1] %> /><br>
+            	Name: <input name="name" value=<%= restaurants.name%>><br>
+		borough: <input name="borough" value=<%= restaurants.borough%>><br>
+             	Cuisine: <input name="cuisine" value=<%= restaurants.cuisine%> /><br>
+		Street: <input name="street" value=<%= restaurants.address.street%> /><br>
+		Building: <input name="building" value=<%= restaurants.address.building%> /><br>
+		Zipcode: <input name="zipcode" value=<%= restaurants.address.zipcode%> /><br>
+		GPS Coordinates (lat.): <input name="gpslat" value=<%= restaurants.address.coord[0] %> /><br>
+		GPS Coordinates (lon.): <input name="gpslon" value=<%= restaurants.address.coord[1] %> /><br>
             <input type="file" name="filetoupload"><br>
             <input type="hidden" name="_id" value=<%= restaurants._id %>>
             <input type="submit" value="update">  
