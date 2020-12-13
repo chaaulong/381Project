@@ -17,6 +17,7 @@ router.post('/login', (req,res) => {
 
 			req.session.authenticated = true;
 			req.session.username = req.body.username;
+			
 		}else{
 			res.redirect('/register');}
 	});
