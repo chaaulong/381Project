@@ -17,7 +17,6 @@ const findDocument = (db, criteria, callback) => {
     console.log(`findDocument: ${JSON.stringify(criteria)}`);
     cursor.toArray((err,docs) => {
         assert.equal(err,null);
-	console.log(docs[0].address.coord);
         console.log(`findDocument: ${docs.length}`);
         callback(docs);
     });
@@ -57,11 +56,14 @@ const removeDocument = (criteria,callback) => {
     });
 }
 const handle_Gmap = (res,criteria) =>{
-	var lat = criteria.lat;
-	var lon = criteria.lon;
-	console.log(lat);
-	console.log(lon);
-	res.status(200).render('map',{lat,lon});
+	var lat = criteria._lat;
+	var lon = criteria._lon;
+	var map = L.map('mapid');
+  	map.setView(new L.LatLng(lat,lon), 12);
+  	var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  	var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 16});
+  	map.addLayer(osm);
+	res.status(200).render('map')
 	};
 
 const handle_Remove = (res, criteria) => {
@@ -117,6 +119,7 @@ const handle_Edit = (res, criteria) => {
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
+		
 	    res.status(200).render('edit',{restaurants:docs[0]});
         });
     });
@@ -131,10 +134,8 @@ const handle_Update = (req, res, criteria) => {
 	updateDoc['address.street'] = req.fields.street;
 	updateDoc['address.building'] = req.fields.building;
 	updateDoc['address.zipcode'] = req.fields.zipcode;
-	updateDoc['address.coord.0'] = req.fields.gpslat;
-	updateDoc['address.coord.1'] = req.fields.gpslon;
-	updateDoc['address.coord[0]'] = req.fields.gpslat;
-	updateDoc['address.coord[1]'] = req.fields.gpslon;
+	updateDoc['address.coord[0]'] = req.fields.gpslon;
+	updateDoc['address.coord[1]'] = req.fields.gpslat;
         if (req.files.filetoupload.size > 0) {
             fs.readFile(req.files.filetoupload.path, (err,data) => {
                 assert.equal(err,null);
@@ -173,6 +174,5 @@ router.get('/delete',(req,res)=>{
 router.get('/gmap',(req,res)=>{	
 	handle_Gmap(res,req.query);
 	})
-
 
 
