@@ -27,16 +27,18 @@
   </div>
 </div>
 <div class="container">
-	<div class ="row">
-		<h1>Restaurants</h1>
-	    	<h2>Showing <%= locals.count %> documents</h2>
-	</div>
-      	<div class ="row">
+	<h1>Restaurants</h1>
+	<h2>Showing <%= locals.count %> documents</h2>
+    <div class="row">
+      <div class="col">
         <a href="/create" class="btn btn-lg btn-primary btn-block" role="button">Create new restaurant</button>
-	
-	<a href="/search" class="btn btn-lg btn-primary btn-block" role="button">Search restaurant</button>
-	</div>
-	 <div class ="row">
+      </div>
+      <div class="col">
+	    <a href="/search" class="btn btn-lg btn-primary btn-block" role="button">Search restaurant</button>
+      </div>
+	  </div>
+    <hr>
+	<div class ="row">
 		    <table>
 		      <% for(var i=0; i < locals.count; i++) { %>
 			<tr>
@@ -44,8 +46,8 @@
 			</tr>
 		      <% } %>
 		    </table>
-		</div>
-<div class="container">
+	</div>
+</div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
