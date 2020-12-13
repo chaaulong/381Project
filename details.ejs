@@ -1,0 +1,26 @@
+<html>
+    <body>
+	 <% if (restaurants.photo) { %>
+            <img src="data:image/jpg;base64, <%= restaurants.photo %>"><br>
+        <% } %>
+        <H2><%= restaurants.name %></H2><hr>
+        <p>Restaurant ID: <%= restaurants.restaurant_id %></p>
+        <p>Name: <%= restaurants.name %></p>
+	<p>borough: <%= restaurants.borough %></p>
+        <p>cuisine: <%= restaurants.cuisine %></p>
+	<p>Address:<%=restaurants.address.building%></p>
+	<p>Coord:<%=JSON.stringify(restaurants.address.coord)%></p>
+	<p>Street:<%=restaurants.address.street%></p>
+	<p>Zipcode:<%=restaurants.address.zipcode%></p>
+	<p>Grades:<%=JSON.stringify(restaurants.grades)%></p>
+	<% if (restaurants.address.coord) { %>
+            <a href="gmap?lat=<%= restaurants.address.coord[0] 	%>&lon=<%=restaurants.address.coord[1]%>&title=<%=restaurants.name%>">Map</a><br>
+        <% } %>
+	<a href="rate?_id=<%= restaurants._id %>">Rate</a><br>
+	<a href="edit?_id=<%= restaurants._id %>">Edit</a><br>
+	<a href="delete?_id=<%= restaurants._id %>">Delete</a><br>
+        <a href="/db">Go Back</a>
+    </body>
+</html>
+
+

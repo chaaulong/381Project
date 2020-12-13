@@ -17,11 +17,11 @@ const findDocument = (db, criteria, callback) => {
     console.log(`findDocument: ${JSON.stringify(criteria)}`);
     cursor.toArray((err,docs) => {
         assert.equal(err,null);
+	console.log(docs[0].address.coord);
         console.log(`findDocument: ${docs.length}`);
         callback(docs);
     });
 }
-
 const updateDocument = (criteria, updateDoc, callback) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
@@ -47,9 +47,7 @@ const removeDocument = (criteria,callback) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
-
          db.collection('restaurants').remove(criteria,
- 
             (err, results) => {
                 client.close();
                 assert.equal(err, null);
@@ -58,15 +56,21 @@ const removeDocument = (criteria,callback) => {
         );
     });
 }
+const handle_Gmap = (res,criteria) =>{
+	var lat = criteria.lat;
+	var lon = criteria.lon;
+	console.log(lat);
+	console.log(lon);
+	res.status(200).render('map',{lat,lon});
+	};
+
 const handle_Remove = (res, criteria) => {
         var DOCID = {};
         DOCID['_id'] = ObjectID(criteria._id)
                 removeDocument(DOCID,(results) => {
 		res.status(200).render('delete',{message:'Delete was successful'})
- 
                 });
         } 
-
 const handle_Find = (res, criteria) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
@@ -113,7 +117,6 @@ const handle_Edit = (res, criteria) => {
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
-		
 	    res.status(200).render('edit',{restaurants:docs[0]});
         });
     });
@@ -128,8 +131,10 @@ const handle_Update = (req, res, criteria) => {
 	updateDoc['address.street'] = req.fields.street;
 	updateDoc['address.building'] = req.fields.building;
 	updateDoc['address.zipcode'] = req.fields.zipcode;
-	updateDoc['address.coord[0]'] = req.fields.gpslon;
-	updateDoc['address.coord[1]'] = req.fields.gpslat;
+	updateDoc['address.coord.0'] = req.fields.gpslat;
+	updateDoc['address.coord.1'] = req.fields.gpslon;
+	updateDoc['address.coord[0]'] = req.fields.gpslat;
+	updateDoc['address.coord[1]'] = req.fields.gpslon;
         if (req.files.filetoupload.size > 0) {
             fs.readFile(req.files.filetoupload.path, (err,data) => {
                 assert.equal(err,null);
@@ -145,10 +150,11 @@ const handle_Update = (req, res, criteria) => {
         }
 }
 
+
+
 router.get('/',(req,res)=>{
 	res.redirect('db/find');
 	}) 
-
 router.get('/find',(req,res)=>{
 	handle_Find(res,req.query.docs);
 	})
@@ -162,7 +168,10 @@ router.post('/update',(req,res)=>{
 	handle_Update(req, res, req.query);
 	})
 router.get('/delete',(req,res)=>{
-	handle_Remove(res, req.query);
+	handle_Remove(res,req.query);
+	})
+router.get('/gmap',(req,res)=>{	
+	handle_Gmap(res,req.query);
 	})
 
 
