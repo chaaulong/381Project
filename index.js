@@ -4,27 +4,12 @@ const http = require('http');
 const url = require('url');
 const mongourl = 'mongodb+srv://dt:s12166654@cluster0.yrpcm.mongodb.net/restaurant?retryWrites=true&w=majority';
 const dbName = 'restaurant';
-const express =require('express');
+const express = require('express');
 const router = express.Router();
 const session = require('cookie-session');
 const assert = require('assert');
-const db = require('./db');
+//const db = require('./db');
 const app = express();
-
-const handle_Find = (res, req, criteria) => {
-	const client = new MongoClient(mongourl);
-	client.connect((err) => {
-		assert.equal(null, err);
-		console.log("Connected successfully to server");
-		const db = client.db(dbName);
-
-		findDocument(res, req, db, criteria, (docs) => {
-		client.close();
-		console.log("Closed DB connection");
-            	res.status(200).render('index',{count: docs.length,  restaurants: docs});
-	});
-        });
-}
 
 const findDocument = (db, criteria, callback) => {
     let cursor = db.collection('restaurants').find(criteria);
@@ -36,12 +21,27 @@ const findDocument = (db, criteria, callback) => {
     });
 }
 
+const handle_Find = (res, req, criteria) => {
+	const client = new MongoClient(mongourl);
+	client.connect((err) => {
+		assert.equal(null, err);
+		console.log("Connected successfully to server");
+		const db = client.db(dbName);
+
+		findDocument(db, criteria, (docs) => {
+		client.close();
+		console.log("Closed DB connection");
+        res.status(200).render('index',{count: docs.length, restaurants: docs});
+    });
+	});
+}
+
 router.get('/', (req,res) => {
 	console.log(req.session);
 	if (!req.session.authenticated) {
 		res.redirect('/login');
 	} else {
-		
+
 		handle_Find(res, req.query.docs);
 		res.status(200).render('index',{name:req.session.username});
 
