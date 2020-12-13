@@ -1,12 +1,13 @@
+<html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
- <meta name="description" content="BasicAuth">
-    <meta name="author" content="siddub">
+  <meta name="description" content="BasicAuth">
+  <meta name="author" content="siddub">
 
     <title>Sign up</title>
-  <title>Create an account</title>  
+
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -21,14 +22,18 @@
         <input name="username" type="text" class="form-control" placeholder="Username" autofocus="true"/>
         <input name="password" type="password" class="form-control" placeholder="Password" />
         <input name="passwordConfirm" type="password" class="form-control" placeholder="Password confirm" />
-
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
       </form>
-
+      <% if (locals.error==true) { %>
+        <div class="alert alert-danger" role="alert"> Please enter username, password and confirm password correctly! </div>
+      <% } %>
+      <% if (locals.existed==true) { %>
+        <div class="alert alert-danger" role="alert"> User already existed! </div>
+      <% } %>
+      <a href="/" class="btn btn-secondary btn-lg" role="button">Back</a>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-
 
 <style>
 input{

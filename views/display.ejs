@@ -1,0 +1,89 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BasicAuth">
+  <meta name="author" content="siddub">
+
+    <title>Main</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+		<h1><%= restaurant.name %></h1>
+    <img src=""></img>
+    <div class="col">
+      <div class="row">
+        <p>Borough: <%= restaurant.borough %></p>
+		  </div>
+      <div class="row">
+        <p>Cuisine: <%= restaurant.cuisine %></p>
+		  </div>
+      <div class="row">
+        <p>Street: <%= restaurant.street %></p>
+		  </div>
+      <div class="row">
+        <p>Building: <%= restaurant.building %></p>
+      </div>
+      <div class="row">
+        <p>Zipcode: <%= restaurant.zipcode %></p>
+      </div>
+      <div class="row">
+        <p>GPS: <%= restaurant.coord %></p>
+      </div>
+      <div class="row">
+        <% for(var i=0; i < restaurant.grades.length; i++) { %>
+          <tr>
+            <td><%= restaurant.grades[i].score %> (<%= restaurant.grades[i].user %>)</td>
+          </tr>
+        <% } %>
+      </div>
+      <div class="row">
+        <p>Created by: <%= restaurant.owner %></p>
+      </div>
+      <div class="row">
+        <a href="gmap?lat=<%= restaurant.coord[0] %>&lon=<%= restaurant.coord[1] %>&title=<%= restaurant.name %>">Map</a>
+      </div>
+      <div class="row">
+        <div class="col">
+          <a class="btn btn-primary" href="/rate?id=<%= restaurant.restaurant_id %>&name=<%= restaurant.name %>" role="button">Rate</a>
+        </div>
+        <div class="col">
+          <a class="btn btn-primary" href="/edit?id=<%= restaurant.restaurant_id %>" role="button">Edit</a>
+        </div>
+        <div class="col">
+          <a class="btn btn-primary" href="/delete?id=<%= restaurant.restaurant_id %>" role="button">Delete</a>
+        </div>
+        <div class="col">
+          <a class="btn btn-primary" href="/" role="button">Back</a>
+        </div>
+      </div>
+    </div>
+</div>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+
+<style>
+input{
+  margin-bottom: 15px
+}
+h2{
+  text-align: center
+}
+.container{
+  width:50%
+}
+</style>
+
+</body>
+</html>

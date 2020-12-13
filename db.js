@@ -4,8 +4,8 @@ const assert = require('assert');
 const http = require('http');
 const url = require('url');
 const express =require('express');
-const Router = express.Router();
- 
+const router = express.Router();
+
 const mongourl = 'mongodb+srv://dt:s12166654@cluster0.yrpcm.mongodb.net/restaurant?retryWrites=true&w=majority';
 const dbName = 'restaurant';
 
@@ -53,7 +53,7 @@ const displayDocument = (db, criteria, callback) => {
 
 
 const deleteDocument = (db, criteria, callback) => {
-      
+
      db.collection('restaurants').deleteMany(criteria, (err,results) => {
         assert.equal(err,null);
         console.log('deleteMany was successful');
@@ -84,14 +84,14 @@ const handle_Details = (res, criteria) => {
         console.log("Connected successfully to server");
         const db = client.db(dbName);
 
-   
+
         let DOCID = {};
         DOCID['_id'] = ObjectID(criteria._id)
-        findDocument(db, DOCID, (docs) => {  
+        findDocument(db, DOCID, (docs) => {
             client.close();
             console.log("Closed DB connection");
 	    res.status(200).render('details', {restaurant: docs[0]});
-            
+
         });
     });
 }
@@ -110,7 +110,7 @@ const handle_Edit = (res, criteria) => {
             client.close();
             assert.equal(err,null);
 	    res.status(200).render('edit',{restaurant: docs[0]})
-            
+
         });
     });
 }
@@ -122,7 +122,7 @@ const handle_Edit = (res, criteria) => {
         console.log("Connected successfully to server");
         const db = client.db(dbName);
 
- 
+
         let DOCID = {};
         DOCID['_id'] = ObjectID(criteria._id)
         db.collection('restaurants').updateOne(DOCID,
@@ -143,6 +143,7 @@ const handle_Edit = (res, criteria) => {
     });
 }*/
 
+
 Router.get('/', (req,res) => {
     res.redirect('/list');
 })
@@ -151,21 +152,21 @@ Router.get('/find', (req,res) => {
     handle_Find(res, req.query.docs);
 })
 
-
 Router.get('/details', (req,res) => {
+
     handle_Details(res, req.query);
 })
 
-Router.get('/edit', (req,res) => {
+router.get('/edit', (req,res) => {
     handle_Edit(res, req.query);
 })
 
-Router.post('/update', (req,res) => {
+router.post('/update', (req,res) => {
     handle_Update(req, res, req.query);
 })
 
-Router.get('/*', (req,res) => {
+router.get('/*', (req,res) => {
     res.status(404).render('info', {message: `${req.path} - Unknown request!` });
 })
- 
-module.exports = Router;
+
+module.exports = router;
