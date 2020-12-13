@@ -28,7 +28,7 @@ const handle_Find = (res, req, criteria) => {
 		console.log("Connected successfully to server");
 		const db = client.db(dbName);
 
-		findDocument(res, req, db, criteria, (docs) => {
+		findDocument(db, criteria, (docs) => {
 		client.close();
 		console.log("Closed DB connection");
         res.status(200).render('index',{count: docs.length, restaurants: docs});
