@@ -21,7 +21,7 @@ const findDocument = (db, criteria, callback) => {
     });
 }
 
-const handle_Find = (res, req, criteria) => {
+const handle_Find = (req, res, criteria) => {
 	const client = new MongoClient(mongourl);
 	client.connect((err) => {
 		assert.equal(null, err);
@@ -31,7 +31,7 @@ const handle_Find = (res, req, criteria) => {
 		findDocument(db, criteria, (docs) => {
 		client.close();
 		console.log("Closed DB connection");
-        res.status(200).render('index',{count: docs.length, restaurants: docs});
+        res.status(200).render('index',{name: req.session.username, count: docs.length, restaurants: docs});
     });
 	});
 }
@@ -41,10 +41,7 @@ router.get('/', (req,res) => {
 	if (!req.session.authenticated) {
 		res.redirect('/login');
 	} else {
-
-		handle_Find(res, req.query.docs);
-		res.status(200).render('index',{name:req.session.username});
-
+		handle_Find(req, res, req.query.docs);
 	}
 });
 
