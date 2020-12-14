@@ -1,17 +1,16 @@
-<html>
+tml>
    <body>
       <H1>Hello, <%= name %></H1>
       <H2>Restaurants</H2>
     <br>
       <div class="search-container">
-        <form action="/search">
-        <input type="text" placeholder="Search" name="search">
-        <select>
-            <option value="all" >All</option>
-            <option value="name" >Name</option>
-            <option value="borough" >Borough</option>
-            <option value="Cuisine" >Cuisine</option>
-            <option value="grade" >Grade</option>
+        <form action="/search" method="POST" enctype="multipart/form-data">
+        <input type="text" placeholder="Search" name="name">
+        <select id="filter" name="filter">
+            <option value="name">Name</option>
+            <option value="borough">Borough</option>
+            <option value="cuisine">Cuisine</option>
+            <option value="grade">Grade</option>
         </select>
         <button type="submit">Submit</button>
         </form>

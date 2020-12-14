@@ -8,6 +8,7 @@ const login = require('./login');
 const register = require('./register');
 const index = require('./index');
 const logout = require('./logout');
+const search = require('./search');
 
 
 app.set('view engine','ejs');
@@ -37,7 +38,9 @@ app.get('/display', db);
 
 app.get('/create', db);
 
-app.get('/search', db);
+app.get('/search', search);
+
+app.post('/search', db);
 
 app.get('/edit', db);
 

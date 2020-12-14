@@ -73,7 +73,11 @@ const handle_Remove = (res, criteria) => {
                 });
         }
 
-const handle_Find = (res, criteria) => {
+const handle_Search = (req, res, cri) => {
+    let criteria = {};
+    if (cri.name) {
+        criteria[cri.filter] = { $regex: cri.name };
+    }
     const client = new MongoClient(mongourl);
     client.connect((err) => {
         assert.equal(null, err);
@@ -83,9 +87,10 @@ const handle_Find = (res, criteria) => {
         findDocument(db, criteria, (docs) => {
             client.close();
             console.log("Closed DB connection");
-	    res.status(200).render('list',{nRestaurants:docs.length,restaurants:docs});
+            res.status(200).render('index',{name: req.session.username, count: docs.length, restaurants: docs});
         });
     });
+
 }
 
 const handle_Details = (res, criteria) => {
@@ -171,8 +176,8 @@ router.post('/update',(req,res)=>{
 	handle_Update(req, res, req.query);
 });
 
-router.get('/search',(req,res)=>{
-	handle_Find(res,req.query.docs);
+router.post('/search',(req,res)=>{
+	handle_Search(req, res, req.fields);
 });
 
 
