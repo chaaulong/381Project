@@ -30,7 +30,7 @@
 	<h1>Restaurants</h1>
 	<h2>Showing <%= locals.count %> documents</h2>
     <div class="row">
-     <div class="input-group mb-3">
+     <div class="input-group mb-3" action="/search" method="POST" enctype="multipart/form-data">
        <div class="input-group-prepend">
          <select class="form-control" id="filter" name="filter">
            <option selected>All</option>
