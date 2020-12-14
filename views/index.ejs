@@ -29,31 +29,32 @@
 <div class="container">
 	<h1>Restaurants</h1>
 	<h2>Showing <%= locals.count %> documents</h2>
-    <div class="row">
-      <div class="col-xs-3">
+    <div class="flex-row d-flex flex-wrap justify-content-center">
+      <div class="col-sm-3 col-md-6 col-lg-4">
         <a href="/create" class="btn btn-primary" role="button">Create new restaurant</a>
       </div>
-      <div class="col-xs-9">
-        <form class="form-inline" action="/search" method="POST" enctype="multipart/form-data">
-          <div class="form-group">
-            <div class="input-group">
-              <div class="input-group-addon select-input">
-                <select class="form-control" id="filter" name="filter">
-                  <option selected>All</option>
-                  <option value="name">Name</option>
-                  <option value="borough">Borough</option>
-                  <option value="cuisine">Cuisine</option>
-                  <option value="grade">Grade</option>
-                </select>
-              </div>
-              <input type="text" class="form-control" placeholder="Search" name="name">
-              <span class="input-group-btn">
-                <button class="btn btn-md btn-primary" type="submit">Submit</button>
-              </span>
-            </div>
-          </div>
-        </form>
+      <div class="col-sm-9 col-md-6 col-lg-8">
+     <form class="form-inline" action="/search" method="POST" enctype="multipart/form-data">
+       <div class="form-group">
+         <div class="input-group">
+           <div class="input-group-addon select-input">
+             <select class="form-control" id="filter" name="filter">
+               <option selected>All</option>
+               <option value="name">Name</option>
+               <option value="borough">Borough</option>
+               <option value="cuisine">Cuisine</option>
+               <option value="grade">Grade</option>
+             </select>
+           </div>
+           <input type="text" class="form-control" placeholder="Search" name="name">
+           <span class="input-group-btn">
+<button class="btn btn-md btn-primary" type="submit">Submit</button>
+           </span>
+         </div>
+       </div>
+     </form>
       </div>
+
     </div>
     <hr>
 		<table>
@@ -83,6 +84,7 @@ h1, h2{
   width: 20%;
   padding: 0;
 }
+
 .input-group-addon.select-input select {
   border: none;
   height: 32px;
