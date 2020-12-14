@@ -153,28 +153,27 @@ const handle_Update = (req, res, criteria) => {
 
 router.get('/display',(req,res)=>{
 	handle_Details(res,req.query);
-	});
+});
 
 router.get('/gmap',(req,res)=>{
 	handle_Gmap(res,req.query);
-	});
+});
 
 router.get('/edit',(req,res)=>{
 	handle_Edit(res,req.query);
-	});
+});
 
 router.get('/delete',(req,res)=>{
 	handle_Remove(res,req.query);
-	});
+});
 
 router.post('/update',(req,res)=>{
 	handle_Update(req, res, req.query);
-	});
+});
 
-/* ---- To be completed ----
 router.get('/search',(req,res)=>{
 	handle_Find(res,req.query.docs);
-	})
-*/
+});
+
 
 module.exports = router;
