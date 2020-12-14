@@ -30,17 +30,18 @@
 	<h1>Restaurants</h1>
 	<h2>Showing <%= locals.count %> documents</h2>
     <div class="row">
-      <div class="search-container">
-        <form action="/search" method="POST" enctype="multipart/form-data">
-        <input type="text" placeholder="Search" name="name">
-        <select id="filter" name="filter">
-            <option value="name">Name</option>
-            <option value="borough">Borough</option>
-            <option value="cuisine">Cuisine</option>
-            <option value="grade">Grade</option>
-        </select>
-        <button type="submit">Submit</button>
-        </form>
+     <div class="input-group mb-3">
+       <div class="input-group-prepend">
+         <select class="form-control" id="filter" name="filter">
+           <option selected>All</option>
+           <option value="name">Name</option>
+           <option value="borough">Borough</option>
+           <option value="cuisine">Cuisine</option>
+           <option value="grade">Grade</option>
+         </select>
+       </div>
+       <input type="text" class="form-control" placeholder="Search" name="name">
+       <button type="submit">Submit</button>
      </div>
     </div>
 </div>
