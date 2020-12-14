@@ -150,6 +150,100 @@ const handle_Update = (req, res, criteria) => {
         }
 }
 
+const handle_Create = (req, res, criteria) => {
+
+	var DOCID = {};
+        DOCID['_id'] = ObjectID(req.fields._id);
+	var createDoc = {};
+        createDoc['name'] = req.fields.name;
+        createDoc['cuisine'] = req.fields.cuisine;
+	createDoc['borough'] = req.fields.borough;
+	createDoc['photo_mimetype'] = req.fields.photo_mimetype;
+	createDoc['address.street'] = req.fields.street;
+	createDoc['address.building'] = req.fields.building;
+	createDoc['address.zipcode'] = req.fields.zipcode;
+	createDoc['address.coord[0]'] = req.fields.gpslon;
+	createDoc['address.coord[1]'] = req.fields.gpslat;
+	createDoc['grades.user'] = req.session.username;
+	createDoc['grades.score'] = req.fields.score;
+	createDoc['owner'] = req.session.username;
+	if (req.files.filetoupload.size > 0) {
+            fs.readFile(req.files.filetoupload.path, (err,data) => {
+                assert.equal(err,null);
+                createDoc['photo'] = new Buffer.from(data).toString('base64');
+            })
+        }else if (req.fields.name =="" || !req.session.authenticated){
+		res.status(200).render('create',{name:req.session.username,Message: `Without Name OR OWNER`});
+	}else if(10 < req.fields.score <= 0){
+			res.status(200).render('create',{name:req.session.username, Message: `FILL in 1-10`});	
+	}
+	updateDocument(DOCID, createDoc, (results) => {
+	res.status(200).render('info',{message:`Created ${results.result.nModified} document`})
+		});
+}
+
+router.get('/api/restaurant/name/:name', (req,res) => {
+    if (req.params.name) {
+        let criteria = {};
+        criteria['name'] = req.params.name;
+        const client = new MongoClient(mongourl);
+        client.connect((err) => {
+            assert.equal(null, err);
+            console.log("Connected successfully to server");
+            const db = client.db(dbName);
+
+            findDocument(db, criteria, (docs) => {
+                client.close();
+                console.log("Closed DB connection");
+                res.status(200).json(docs);
+            });
+        });
+    } else {
+        res.status(500).json({"error": "missing name"});
+    }
+})
+
+router.get('/api/restaurant/borough/:borough', (req,res) => {
+    if (req.params.borough) {
+        let criteria = {};
+        criteria['borough'] = req.params.borough;
+        const client = new MongoClient(mongourl);
+        client.connect((err) => {
+            assert.equal(null, err);
+            console.log("Connected successfully to server");
+            const db = client.db(dbName);
+
+            findDocument(db, criteria, (docs) => {
+                client.close();
+                console.log("Closed DB connection");
+                res.status(200).json(docs);
+            });
+        });
+    } else {
+        res.status(500).json({"error": "missing borough"});
+    }
+})
+
+router.get('/api/restaurant/cuisine/:cuisine', (req,res) => {
+    if (req.params.cuisine) {
+        let criteria = {};
+        criteria['cuisine'] = req.params.cuisine;
+        const client = new MongoClient(mongourl);
+        client.connect((err) => {
+            assert.equal(null, err);
+            console.log("Connected successfully to server");
+            const db = client.db(dbName);
+
+            findDocument(db, criteria, (docs) => {
+                client.close();
+                console.log("Closed DB connection");
+                res.status(200).json(docs);
+            });
+        });
+    } else {
+        res.status(500).json({"error": "missing cuisine"});
+    }
+})
 
 router.get('/display',(req,res)=>{
 	handle_Details(res,req.query);
@@ -169,6 +263,15 @@ router.get('/delete',(req,res)=>{
 
 router.post('/update',(req,res)=>{
 	handle_Update(req, res, req.query);
+	});
+
+router.get('/create',(req,res)=>{
+	res.status(200).render('create',{name:req.session.username, Message:""});
+	handle_Create(req, res, req.query);
+	});
+
+router.post('/create',(req,res)=>{
+	handle_Create(req, res, req.query);
 	});
 
 /* ---- To be completed ----

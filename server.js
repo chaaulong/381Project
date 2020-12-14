@@ -37,6 +37,8 @@ app.get('/display', db);
 
 app.get('/create', db);
 
+app.post('/create', db);
+
 app.get('/search', db);
 
 app.get('/edit', db);
@@ -46,6 +48,12 @@ app.get('/rate', db);
 app.get('/delete', db);
 
 app.get('/gmap', db);
+
+app.get('/api/restaurant/name/:name', db);
+
+app.get('/api/restaurant/borough/:borough', db);
+
+app.get('/api/restaurant/cuisine/:cuisine', db);
 
 app.post('/update', db);
 
