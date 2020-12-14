@@ -27,25 +27,26 @@
   </div>
 </div>
 <div class="container">
-	<div class ="row">
-		<h1>Restaurants</h1>
-	    	<h2>Showing <%= locals.count %> documents</h2>
-	</div>
-      	<div class ="row">
-        <a href="/create" class="btn btn-lg btn-primary btn-block" role="button">Create new restaurant</button>
-	
-	<a href="/search" class="btn btn-lg btn-primary btn-block" role="button">Search restaurant</button>
-	</div>
-	 <div class ="row">
-		    <table>
-		      <% for(var i=0; i < locals.count; i++) { %>
-			<tr>
-			  <td><a href="/display?id=<%= restaurants[i].restaurant_id %>"><%= restaurants[i].name %></a></td>
-			</tr>
-		      <% } %>
-		    </table>
-		</div>
-<div class="container">
+	<h1>Restaurants</h1>
+	<h2>Showing <%= locals.count %> documents</h2>
+    <div class="row">
+      <div class="col-xs-3">
+        <a href="/create" class="btn btn-primary" role="button">Create new restaurant</a>
+      </div>
+      <div class="col-xs-6"></div>
+      <div class="col-xs-3">
+	<a href="/search" class="btn btn-primary" role="button">Search restaurant</a>
+      </div>
+    </div>
+    <hr>
+		<table>
+		    <% for(var i=0; i < locals.count; i++) { %>
+          <tr>
+            <td><%= i+1 %>. <a href="/display?_id=<%= restaurants[i]._id %>"><%= restaurants[i].name %></a></td>
+          </tr>
+        <% } %>
+    </table>
+</div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -55,12 +56,13 @@
 input{
   margin-bottom: 15px
 }
-h2{
+h1, h2{
   text-align: center
 }
 .container{
   width:50%
 }
+
 </style>
 
 </body>
