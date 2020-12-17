@@ -10,7 +10,6 @@ const fs = require('fs');
 const formidable = require('express-formidable');
 const dbName = 'restaurant';
 router.use(formidable());
-module.exports =router;
 
 const findDocument = (db, criteria, callback) => {
     let cursor = db.collection('restaurants').find(criteria);
@@ -40,6 +39,25 @@ const updateDocument = (criteria, updateDoc, callback) => {
         );
     });
 }
+const updateRate = (criteria, rateDoc, callback) => {
+    const client = new MongoClient(mongourl);
+    	client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+         db.collection('restaurants').updateOne(criteria,
+            {
+                $push : {grades:
+		rateDoc
+            }},
+            (err, results) => {
+                client.close();
+                assert.equal(err, null);
+                callback(results);  
+            }
+        );
+    });
+    }
 const removeDocument = (criteria,callback) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
@@ -66,14 +84,34 @@ const handle_Gmap = (res,criteria) =>{
 	res.status(200).render('map')
 	};
 
-const handle_Remove = (res, criteria) => {
-        var DOCID = {};
-        DOCID['_id'] = ObjectID(criteria._id)
-                removeDocument(DOCID,(results) => {
-		res.status(200).render('delete',{message:'Delete was successful'})
-                });
-        } 
-const handle_Find = (res, criteria) => {
+const handle_Remove = (res,req, criteria) => {
+       let DOCID = {};
+    const client = new MongoClient(mongourl);  
+   
+    DOCID['_id'] = ObjectID(criteria._id);
+    DOCID['owner']=req.session.username;
+    client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+        let cursor = db.collection('restaurants').find(DOCID);
+        cursor.toArray((err,docs) => {
+            client.close();
+            assert.equal(err,null);
+		if (docs!=""){
+	    res.status(200).render('info',{message:'Delete is successful'})
+	}else{
+	res.status(200).render('info',{message:'You are not authorized'})
+	}
+        })
+    });
+        }
+
+const handle_Search = (req, res, cri) => {
+    let criteria = {};
+    if (cri.name) {
+        criteria[cri.filter] = { $regex: cri.name };
+    }
     const client = new MongoClient(mongourl);
     client.connect((err) => {
         assert.equal(null, err);
@@ -83,9 +121,10 @@ const handle_Find = (res, criteria) => {
         findDocument(db, criteria, (docs) => {
             client.close();
             console.log("Closed DB connection");
-	    res.status(200).render('list',{nRestaurants:docs.length,restaurants:docs});	   
+            res.status(200).render('index',{name: req.session.username, count: docs.length, restaurants: docs});
         });
     });
+
 }
 
 const handle_Details = (res, criteria) => {
@@ -97,31 +136,34 @@ const handle_Details = (res, criteria) => {
 
         let DOCID = {};
         DOCID['_id'] = ObjectID(criteria._id)
-        findDocument(db, DOCID, (docs) => {  
+        findDocument(db, DOCID, (docs) => {
             client.close();
             console.log("Closed DB connection");
-	    res.status(200.).render('details',{restaurants:docs[0]});
-		
+	    res.status(200).render('display',{restaurant:docs[0]});
         });
     });
 }
 
-const handle_Edit = (res, criteria) => {
-    const client = new MongoClient(mongourl);
+const handle_Edit = (res, req,criteria) => {
+    let DOCID = {};
+    const client = new MongoClient(mongourl);  
+   
+    DOCID['_id'] = ObjectID(criteria._id);
+    DOCID['owner']=req.session.username;
     client.connect((err) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
- 
-        let DOCID = {};
-        DOCID['_id'] = ObjectID(criteria._id)
         let cursor = db.collection('restaurants').find(DOCID);
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
-		
-	    res.status(200).render('edit',{restaurants:docs[0]});
-        });
+		if (docs!=""){
+	    res.status(200).render('edit',{restaurant:docs[0]})
+	}else{
+	res.status(200).render('info',{message:'You are not authorized'})
+	}
+        })
     });
 }
 const handle_Update = (req, res, criteria) => {
@@ -134,8 +176,10 @@ const handle_Update = (req, res, criteria) => {
 	updateDoc['address.street'] = req.fields.street;
 	updateDoc['address.building'] = req.fields.building;
 	updateDoc['address.zipcode'] = req.fields.zipcode;
-	updateDoc['address.coord[0]'] = req.fields.gpslon;
-	updateDoc['address.coord[1]'] = req.fields.gpslat;
+	updateDoc['address.coord[0]'] = req.fields.gpslat;
+	updateDoc['address.coord[1]'] = req.fields.gpslon;
+	updateDoc['address.coord.0'] = req.fields.gpslat;
+	updateDoc['address.coord.1'] = req.fields.gpslon;
         if (req.files.filetoupload.size > 0) {
             fs.readFile(req.files.filetoupload.path, (err,data) => {
                 assert.equal(err,null);
@@ -146,33 +190,88 @@ const handle_Update = (req, res, criteria) => {
             });
         } else {
             updateDocument(DOCID, updateDoc, (results) => {
-	res.status(200).render('info',{message:`Updated ${results.result.nModified} document(s)`})    
+	res.status(200).render('info',{message:`Updated ${results.result.nModified} document(s)`})
             });
         }
 }
 
+const handle_rateData = (res, criteria) => {
+    const client = new MongoClient(mongourl);
+    client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected success to server");
+        const db = client.db(dbName);
+        let DOCID = {};
+        DOCID['_id'] = ObjectID(criteria._id)
+        let cursor = db.collection('restaurants').find(DOCID);
+        cursor.toArray((err,docs) => {
+            client.close();
+            assert.equal(err,null);
+	    res.status(200).render('rate',{restaurant:docs[0]});
+    		});
+	});
+}
 
+const handle_Rate = (req,res, criteria) => {
+    var DOCID = {};
+    DOCID['_id'] = ObjectID(req.fields._id);
+    DOCID['grades']={$elemMatch:{user:req.session.username}};
+    var rateDoc = {};
+    rateDoc['score'] = req.fields.score;
+    rateDoc['user'] = req.session.username;
+    const client = new MongoClient(mongourl);
+    	client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+	let cursor = db.collection('restaurants').find(DOCID);
+	cursor.toArray((err,docs) =>{
+	client.close();
+	console.log(docs);
+	console.log('here');
 
-router.get('/',(req,res)=>{
-	res.redirect('db/find');
-	}) 
-router.get('/find',(req,res)=>{
-	handle_Find(res,req.query.docs);
-	})
-router.get('/details',(req,res)=>{
+	assert.equal(err,null);
+	if (docs="") 
+	{
+    updateRate(DOCID, rateDoc, (result) => {
+    res.status(200).render('info',{message:'Success'});
+        })
+		 }
+ 	else{
+        res.status(200).render('info',{message:'You have rated already'});
+    }});
+    	});    
+    };
+
+router.get('/display',(req,res)=>{
 	handle_Details(res,req.query);
-	})
+});
+
+router.get('/gmap',(req,res)=>{
+	handle_Gmap(res,req.query);
+});
+
 router.get('/edit',(req,res)=>{
-	handle_Edit(res,req.query);
-	})
+	handle_Edit(res,req,req.query);
+});
+
+router.get('/delete',(req,res)=>{
+	handle_Remove(res,req,req.query);
+});
+
 router.post('/update',(req,res)=>{
 	handle_Update(req, res, req.query);
-	})
-router.get('/delete',(req,res)=>{
-	handle_Remove(res,req.query);
-	})
-router.get('/gmap',(req,res)=>{	
-	handle_Gmap(res,req.query);
-	})
+});
 
+router.post('/search',(req,res)=>{
+	handle_Search(req, res, req.fields);
+});
 
+router.get('/rate',(req,res)=>{
+	handle_rateData(res, req.query);
+	});
+router.post('/rated',(req,res)=>{
+	handle_Rate(req,res, req.query);
+	});
+
+module.exports = router;
