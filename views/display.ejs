@@ -1,0 +1,95 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BasicAuth">
+  <meta name="author" content="siddub">
+
+    <title>Main</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+		<h1><%= restaurant.name %></h1>
+    <% if (restaurant.photo) { %>
+            <img src="data:image/jpg;base64, <%= restaurant.photo %>"><br>
+    <% } %>
+    <div class="col">
+      <div class="row">
+        <p>Restaurant ID: <%= restaurant.restaurant_id %></p>
+		  </div>
+      <div class="row">
+        <p>Borough: <%= restaurant.borough %></p>
+		  </div>
+      <div class="row">
+        <p>Cuisine: <%= restaurant.cuisine %></p>
+		  </div>
+      <div class="row">
+        <p>Street: <%= restaurant.address.street %></p>
+		  </div>
+      <div class="row">
+        <p>Building: <%= restaurant.address.building %></p>
+      </div>
+      <div class="row">
+        <p>Zipcode: <%= restaurant.zipcode %></p>
+      </div>
+      <div class="row">
+        <p>GPS: <%=JSON.stringify(restaurant.address.coord)%></p>
+      </div>
+      <p>Rating:</p>
+	<ol type="1">
+	<% for (var r of (restaurant.grades)){ %>
+	<li> <%=JSON.stringify(r.score)%>(<%=JSON.stringify(r.user)%>)</li>
+	<%}%>
+	</ol>
+      <div class="row">
+        <p>Created by: <%= restaurant.owner %></p>
+      </div>
+        <% if (restaurant.address.coord) { %>
+          <div class="row">
+            <a href="gmap?lat=<%= restaurant.address.coord[0] %>&lon=<%=restaurant.address.coord[1]%>&title=<%=restaurant.name%>">Map</a><br>
+          </div>
+        <% } %>
+      <div class="row">
+        <div class="col">
+          <a class="btn btn-primary" href="/rate?_id=<%= restaurant._id %>&name=<%= restaurant.name %>" role="button">Rate</a>
+        </div>
+        <div class="col">
+          <a class="btn btn-primary" href="/edit?_id=<%= restaurant._id %>" role="button">Edit</a>
+        </div>
+        <div class="col">
+          <a class="btn btn-primary" href="/delete?_id=<%= restaurant._id %>" role="button">Delete</a>
+        </div>
+        <div class="col">
+          <a class="btn btn-primary" href="/" role="button">Back</a>
+        </div>
+      </div>
+    </div>
+</div>
+
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+
+<style>
+input{
+  margin-bottom: 15px
+}
+h2{
+  text-align: center
+}
+.container{
+  width:50%
+}
+</style>
+
+</body>
+</html>
