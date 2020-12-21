@@ -11,10 +11,13 @@
         "bcrypt": "*",
         "body-parser": "*",
         "mongodb": "*",
-        "express-formidable": "*"
+        "express-formidable": "*",
+        "browserify": "*",
+        "leaflet": "1.7.1"
     },
     "engine": "node >= 12.0.0",
     "scripts": {
-        "start": "node server"
+        "start": "node server",
+        "build": "browserify map.js -o webmap.js"
     }
 }

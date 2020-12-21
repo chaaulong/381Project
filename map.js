@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const session = require('cookie-session');
-const L = require('./leaflet/leaflet');
+const L = require('leaflet');
 
 router.get('/gmap', (req,res) => {
   var lat = req.query.lat;
