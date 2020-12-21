@@ -9,6 +9,7 @@ const register = require('./register');
 const index = require('./index');
 const logout = require('./logout');
 const map = require('./map');
+const rest = require('./rest');
 
 
 app.set('view engine','ejs');
@@ -53,5 +54,11 @@ app.get('/delete', db);
 app.get('/gmap', map);
 
 app.post('/update', db);
+
+app.get('/api/restaurant/name/:name', rest);
+
+app.get('/api/restaurant/borough/:borough', rest);
+
+app.get('/api/restaurant/cuisine/:cuisine', rest);
 
 app.listen(process.env.PORT || 8099);

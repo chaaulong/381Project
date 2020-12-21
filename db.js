@@ -20,17 +20,13 @@ const findDocument = (db, criteria, callback) => {
         callback(docs);
     });
 }
-const createDocument = (criteria, createDoc, callback) => {
+const createDocument = (createDoc, callback) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
-        db.collection('restaurants').updateOne(criteria,
-            {
-                $set : createDoc
-            },
-            (err, results) => {
+        db.collection('restaurants').insert(createDoc, (err, results) => {
                 client.close();
                 assert.equal(err, null);
                 callback(results);
@@ -250,10 +246,7 @@ const handle_Rate = (req,res, criteria) => {
     	});
 }
 
-const handle_Create = (req, res, criteria) => {
-
-    var DOCID = {};
-    DOCID['_id'] = ObjectID(req.fields._id);
+const handle_Create = (req, res) => {
 	  var createDoc = {};
     createDoc['name'] = req.fields.name;
     createDoc['cuisine'] = req.fields.cuisine;
@@ -272,10 +265,10 @@ const handle_Create = (req, res, criteria) => {
             assert.equal(err,null);
                 createDoc['photo'] = new Buffer.from(data).toString('base64');
         });
-    } else if (req.fields.name =="" || !req.session.authenticated) {
-		    res.status(200).render('info',{message: 'Without Name OR OWNER'});
+    } if (!req.session.authenticated) {
+		    res.status(200).render('info',{message: 'Please login to create a new restaurant'});
 	  }
-	  createDocument(DOCID, createDoc, (results) => {
+	  createDocument(createDoc, (results) => {
 	      res.status(200).render('info',{message:`Created ${results.result.nModified} document`})
 		});
 }
@@ -284,7 +277,7 @@ router.get('/create',(req,res)=>{
   	res.status(200).render('create',{name:req.session.username});
 });
 router.post('/create',(req,res)=>{
-  	handle_Create(req, res, req.query);
+  	handle_Create(req, res);
 });
 router.get('/display',(req,res)=>{
     handle_Details(res,req.query);
