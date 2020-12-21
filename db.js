@@ -88,7 +88,7 @@ const handle_Remove = (res,req, criteria) => {
 		        if (docs!=""){
                 removeDocument(DOCID, (result) => {
                     res.status(200).render('info',{message:'Delete is successful'});
-                });  
+                });
 	          } else {
   	            res.status(200).render('info',{message:'You are not authorized'});
   	        }
@@ -234,9 +234,6 @@ const handle_Rate = (req,res, criteria) => {
 
 router.get('/display',(req,res)=>{
     handle_Details(res,req.query);
-});
-router.get('/gmap',(req,res)=>{
-  	handle_Gmap(res,req.query);
 });
 router.get('/edit',(req,res)=>{
 	  handle_Edit(res,req,req.query);

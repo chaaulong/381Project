@@ -24,10 +24,10 @@
         <input name="passwordConfirm" type="password" class="form-control" placeholder="Password confirm" />
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
       </form>
-      <% if (locals.error==true) { %>
+      <% if (locals.error) { %>
         <div class="alert alert-danger" role="alert"> Please enter username, password and confirm password correctly! </div>
       <% } %>
-      <% if (locals.existed==true) { %>
+      <% if (locals.existed) { %>
         <div class="alert alert-danger" role="alert"> User already existed! </div>
       <% } %>
       <a href="/" class="btn btn-secondary btn-lg" role="button">Back</a>

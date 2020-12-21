@@ -8,6 +8,7 @@ const login = require('./login');
 const register = require('./register');
 const index = require('./index');
 const logout = require('./logout');
+const map = require('./map');
 
 
 app.set('view engine','ejs');
@@ -47,7 +48,7 @@ app.post('/rated', db);
 
 app.get('/delete', db);
 
-app.get('/gmap', db);
+app.get('/gmap', map);
 
 app.post('/update', db);
 
