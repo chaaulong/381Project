@@ -54,7 +54,7 @@
       </div>
         <% if (restaurant.address.coord) { %>
           <div class="row">
-            <a href="gmap?lat=<%= restaurant.address.coord.0 %>&lon=<%= restaurant.address.coord.1 %>&title=<%= restaurant.name %>">Map</a><br>
+            <a href="gmap?lat=<%= restaurant.address.coord[0] %>&lon=<%= restaurant.address.coord[1] %>&title=<%= restaurant.name %>">Map</a><br>
           </div>
         <% } %>
       <div class="row">
