@@ -26,8 +26,7 @@ const updateDocument = (criteria, updateDoc, callback) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
-
-         db.collection('restaurants').updateOne(criteria,
+        db.collection('restaurants').updateOne(criteria,
             {
                 $set : updateDoc
             },
@@ -39,13 +38,32 @@ const updateDocument = (criteria, updateDoc, callback) => {
         );
     });
 }
+const updateRate = (criteria, rateDoc, callback) => {
+    const client = new MongoClient(mongourl);
+      	client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+        db.collection('restaurants').updateOne(criteria,
+            {
+                $push : {grades:
+		                rateDoc
+            }},
+            (err, results) => {
+                client.close();
+                assert.equal(err, null);
+                callback(results);
+            }
+        );
+        });
+}
 const removeDocument = (criteria,callback) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
-         db.collection('restaurants').remove(criteria,
+        db.collection('restaurants').remove(criteria,
             (err, results) => {
                 client.close();
                 assert.equal(err, null);
@@ -55,24 +73,36 @@ const removeDocument = (criteria,callback) => {
     });
 }
 const handle_Gmap = (res,criteria) =>{
-	var lat = criteria._lat;
-	var lon = criteria._lon;
-	var map = L.map('mapid');
+  	var lat = criteria._lat;
+  	var lon = criteria._lon;
+  	var map = L.map('mapid');
   	map.setView(new L.LatLng(lat,lon), 12);
   	var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
   	var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 16});
   	map.addLayer(osm);
-	res.status(200).render('map')
-	};
-
-const handle_Remove = (res, criteria) => {
-        var DOCID = {};
-        DOCID['_id'] = ObjectID(criteria._id)
-                removeDocument(DOCID,(results) => {
-		res.status(200).render('info',{message:'Delete was successful'})
-                });
-        }
-
+  	res.status(200).render('map');
+};
+const handle_Remove = (res,req, criteria) => {
+    let DOCID = {};
+    const client = new MongoClient(mongourl);
+    DOCID['_id'] = ObjectID(criteria._id);
+    DOCID['owner'] = req.session.username;
+    client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+        let cursor = db.collection('restaurants').find(DOCID);
+        cursor.toArray((err,docs) => {
+            client.close();
+            assert.equal(err,null);
+		        if (docs!=""){
+  	             res.status(200).render('info',{message:'Delete is successful'});
+	          } else {
+  	             res.status(200).render('info',{message:'You are not authorized'});
+  	        }
+        });
+    });
+}
 const handle_Search = (req, res, cri) => {
     let criteria = {};
     if (cri.name) {
@@ -83,7 +113,6 @@ const handle_Search = (req, res, cri) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
-
         findDocument(db, criteria, (docs) => {
             client.close();
             console.log("Closed DB connection");
@@ -92,39 +121,39 @@ const handle_Search = (req, res, cri) => {
     });
 
 }
-
 const handle_Details = (res, criteria) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
-
         let DOCID = {};
         DOCID['_id'] = ObjectID(criteria._id)
         findDocument(db, DOCID, (docs) => {
             client.close();
             console.log("Closed DB connection");
-	    res.status(200).render('display',{restaurant:docs[0]});
+	          res.status(200).render('display',{restaurant:docs[0]});
         });
     });
 }
-
-const handle_Edit = (res, criteria) => {
+const handle_Edit = (res, req, criteria) => {
+    let DOCID = {};
     const client = new MongoClient(mongourl);
+    DOCID['_id'] = ObjectID(criteria._id);
+    DOCID['owner']=req.session.username;
     client.connect((err) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
-
-        let DOCID = {};
-        DOCID['_id'] = ObjectID(criteria._id)
         let cursor = db.collection('restaurants').find(DOCID);
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
-
-	    res.status(200).render('edit',{restaurant:docs[0]});
+		        if (docs!=""){
+	              res.status(200).render('edit',{restaurant:docs[0]});
+            } else {
+                res.status(200).render('info',{message:'You are not authorized'});
+            }
         });
     });
 }
@@ -134,51 +163,96 @@ const handle_Update = (req, res, criteria) => {
         var updateDoc = {};
         updateDoc['name'] = req.fields.name;
         updateDoc['cuisine'] = req.fields.cuisine;
-	updateDoc['borough'] = req.fields.borough;
-	updateDoc['address.street'] = req.fields.street;
-	updateDoc['address.building'] = req.fields.building;
-	updateDoc['address.zipcode'] = req.fields.zipcode;
-	updateDoc['address.coord[0]'] = req.fields.gpslon;
-	updateDoc['address.coord[1]'] = req.fields.gpslat;
+        updateDoc['borough'] = req.fields.borough;
+        updateDoc['address.street'] = req.fields.street;
+        updateDoc['address.building'] = req.fields.building;
+        updateDoc['address.zipcode'] = req.fields.zipcode;
+        updateDoc['address.coord[0]'] = req.fields.gpslat;
+        updateDoc['address.coord[1]'] = req.fields.gpslon;
+        updateDoc['address.coord.0'] = req.fields.gpslat;
+        updateDoc['address.coord.1'] = req.fields.gpslon;
         if (req.files.filetoupload.size > 0) {
             fs.readFile(req.files.filetoupload.path, (err,data) => {
                 assert.equal(err,null);
                 updateDoc['photo'] = new Buffer.from(data).toString('base64');
                 updateDocument(DOCID, updateDoc, (results) => {
-		res.status(200).render('info',{message:`Updated ${results.result.nModified} document(s)`})
+		                res.status(200).render('info',{message:`Updated ${results.result.nModified} document(s)`})
                 });
             });
         } else {
             updateDocument(DOCID, updateDoc, (results) => {
-	res.status(200).render('info',{message:`Updated ${results.result.nModified} document(s)`})
+	              res.status(200).render('info',{message:`Updated ${results.result.nModified} document(s)`})
             });
         }
 }
-
+const handle_rateData = (res, criteria) => {
+    const client = new MongoClient(mongourl);
+    client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected success to server");
+        const db = client.db(dbName);
+        let DOCID = {};
+        DOCID['_id'] = ObjectID(criteria._id)
+        let cursor = db.collection('restaurants').find(DOCID);
+        cursor.toArray((err,docs) => {
+            client.close();
+            assert.equal(err,null);
+	          res.status(200).render('rate',{restaurant:docs[0]});
+    		});
+	});
+}
+const handle_Rate = (req,res, criteria) => {
+    var DOCID = {};
+    DOCID['_id'] = ObjectID(req.fields._id);
+    DOCID['grades']={$elemMatch:{user:req.session.username}};
+    var rateDoc = {};
+    rateDoc['score'] = req.fields.score;
+    rateDoc['user'] = req.session.username;
+    const client = new MongoClient(mongourl);
+    client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+	      let cursor = db.collection('restaurants').find(DOCID);
+	      cursor.toArray((err,docs) => {
+            client.close();
+	          console.log(docs);
+	          console.log('here');
+	          assert.equal(err,null);
+          	if (docs="") {
+                updateRate(DOCID, rateDoc, (result) => {
+                    res.status(200).render('info',{message:'Success'});
+                });
+		        } else {
+                res.status(200).render('info',{message:'You have rated already'});
+            }
+        });
+    	});
+}
 
 router.get('/display',(req,res)=>{
-	handle_Details(res,req.query);
+    handle_Details(res,req.query);
 });
-
 router.get('/gmap',(req,res)=>{
-	handle_Gmap(res,req.query);
+  	handle_Gmap(res,req.query);
 });
-
 router.get('/edit',(req,res)=>{
-	handle_Edit(res,req.query);
+	  handle_Edit(res,req,req.query);
 });
-
 router.get('/delete',(req,res)=>{
-	handle_Remove(res,req.query);
+  	handle_Remove(res,req,req.query);
 });
-
 router.post('/update',(req,res)=>{
-	handle_Update(req, res, req.query);
+  	handle_Update(req,res,req.query);
 });
-
 router.post('/search',(req,res)=>{
-	handle_Search(req, res, req.fields);
+  	handle_Search(req,res,req.fields);
 });
-
+router.get('/rate',(req,res)=>{
+  	handle_rateData(res,req.query);
+});
+router.post('/rated',(req,res)=>{
+  	handle_Rate(req,res,req.query);
+});
 
 module.exports = router;
