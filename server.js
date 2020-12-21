@@ -38,6 +38,8 @@ app.get('/display', db);
 
 app.get('/create', db);
 
+app.post('/create', db);
+
 app.post('/search', db);
 
 app.get('/edit', db);
