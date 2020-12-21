@@ -72,16 +72,6 @@ const removeDocument = (criteria,callback) => {
         );
     });
 }
-const handle_Gmap = (res,criteria) =>{
-  	var lat = criteria._lat;
-  	var lon = criteria._lon;
-  	var map = L.map('mapid');
-  	map.setView(new L.LatLng(lat,lon), 12);
-  	var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  	var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 16});
-  	map.addLayer(osm);
-  	res.status(200).render('map');
-};
 const handle_Remove = (res,req, criteria) => {
     let DOCID = {};
     const client = new MongoClient(mongourl);
@@ -96,12 +86,24 @@ const handle_Remove = (res,req, criteria) => {
             client.close();
             assert.equal(err,null);
 		        if (docs!=""){
-  	             res.status(200).render('info',{message:'Delete is successful'});
+                removeDocument(DOCID, (result) => {
+                    res.status(200).render('info',{message:'Delete is successful'});
+                });  
 	          } else {
-  	             res.status(200).render('info',{message:'You are not authorized'});
+  	            res.status(200).render('info',{message:'You are not authorized'});
   	        }
         });
     });
+}
+const handle_Gmap = (res,criteria) =>{
+  	var lat = criteria._lat;
+  	var lon = criteria._lon;
+  	var map = L.map('mapid');
+  	map.setView(new L.LatLng(lat,lon), 12);
+  	var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  	var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 16});
+  	map.addLayer(osm);
+  	res.status(200).render('map');
 }
 const handle_Search = (req, res, cri) => {
     let criteria = {};
