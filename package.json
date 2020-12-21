@@ -12,12 +12,10 @@
         "body-parser": "*",
         "mongodb": "*",
         "express-formidable": "*",
-        "leaflet": "*",
-        "browserify": "*"
+        "leaflet": "*"
     },
     "engine": "node >= 12.0.0",
     "scripts": {
-        "start": "node server",
-        "build": "browserify webmap.js -o ./webmap.js"
+        "start": "node server"
     }
 }
