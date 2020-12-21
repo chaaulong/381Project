@@ -43,7 +43,7 @@ app.get('/edit', db);
 
 app.get('/rate', db);
 
-app.post('rated', db);
+app.post('/rated', db);
 
 app.get('/delete', db);
 
