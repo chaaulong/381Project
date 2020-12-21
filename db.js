@@ -20,6 +20,24 @@ const findDocument = (db, criteria, callback) => {
         callback(docs);
     });
 }
+const createDocument = (criteria, createDoc, callback) => {
+    const client = new MongoClient(mongourl);
+    client.connect((err) => {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+        const db = client.db(dbName);
+        db.collection('restaurants').updateOne(criteria,
+            {
+                $set : createDoc
+            },
+            (err, results) => {
+                client.close();
+                assert.equal(err, null);
+                callback(results);
+            }
+        );
+    });
+}
 const updateDocument = (criteria, updateDoc, callback) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
@@ -232,6 +250,42 @@ const handle_Rate = (req,res, criteria) => {
     	});
 }
 
+const handle_Create = (req, res, criteria) => {
+
+    var DOCID = {};
+    DOCID['_id'] = ObjectID(req.fields._id);
+	  var createDoc = {};
+    createDoc['name'] = req.fields.name;
+    createDoc['cuisine'] = req.fields.cuisine;
+  	createDoc['borough'] = req.fields.borough;
+  	createDoc['photo_mimetype'] = req.fields.photo_mimetype;
+  	createDoc['address.street'] = req.fields.street;
+  	createDoc['address.building'] = req.fields.building;
+  	createDoc['address.zipcode'] = req.fields.zipcode;
+  	createDoc['address.coord[0]'] = req.fields.gpslon;
+  	createDoc['address.coord[1]'] = req.fields.gpslat;
+  	createDoc['grades.user'] = req.session.username;
+  	createDoc['grades.score'] = req.fields.score;
+  	createDoc['owner'] = req.session.username;
+	  if (req.files.filetoupload.size > 0) {
+        fs.readFile(req.files.filetoupload.path, (err,data) => {
+            assert.equal(err,null);
+                createDoc['photo'] = new Buffer.from(data).toString('base64');
+        });
+    } else if (req.fields.name =="" || !req.session.authenticated) {
+		    res.status(200).render('info',{message: 'Without Name OR OWNER'});
+	  }
+	  createDocument(DOCID, createDoc, (results) => {
+	      res.status(200).render('info',{message:`Created ${results.result.nModified} document`})
+		});
+}
+
+router.get('/create',(req,res)=>{
+  	res.status(200).render('create',{name:req.session.username});
+});
+router.post('/create',(req,res)=>{
+  	handle_Create(req, res, req.query);
+});
 router.get('/display',(req,res)=>{
     handle_Details(res,req.query);
 });

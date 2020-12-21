@@ -9,7 +9,7 @@
 		Zipcode: <input name="zipcode" value=<%= restaurant.address.zipcode %> /><br>
 		GPS Coordinates (lat.): <input name="gpslat" value=<%= restaurant.address.coord[0] %> /><br>
 		GPS Coordinates (lon.): <input name="gpslon" value=<%= restaurant.address.coord[1] %> /><br>
-            <input type="file" name="filetoupload"><br>
+    Photo: <input type="file" name="filetoupload"><br>
             <input type="hidden" name="_id" value=<%= restaurant._id %>>
             <input type="submit" value="update">
         </form>
