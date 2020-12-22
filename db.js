@@ -132,7 +132,7 @@ const handle_Search = (req, res, cri) => {
         findDocument(db, criteria, (docs) => {
             client.close();
             console.log("Closed DB connection");
-            res.status(200).render('index',{name: req.session.username, count: docs.length, restaurants: docs});
+            res.status(200).render('search',{name: req.session.username, count: docs.length, restaurants: docs});
         });
     });
 
