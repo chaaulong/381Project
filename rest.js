@@ -1,5 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
+const assert = require('assert');
+const http = require('http');
+const url = require('url');
+const mongourl = 'mongodb+srv://dt:s12166654@cluster0.yrpcm.mongodb.net/restaurant?retryWrites=true&w=majority';
+const dbName = 'restaurant';
 
 router.get('/api/restaurant/name/:name', (req,res) => {
     if (req.params.name) {
