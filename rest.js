@@ -8,6 +8,16 @@ const url = require('url');
 const mongourl = 'mongodb+srv://dt:s12166654@cluster0.yrpcm.mongodb.net/restaurant?retryWrites=true&w=majority';
 const dbName = 'restaurant';
 
+const findDocument = (db, criteria, callback) => {
+    let cursor = db.collection('restaurants').find(criteria);
+    console.log(`findDocument: ${JSON.stringify(criteria)}`);
+    cursor.toArray((err,docs) => {
+        assert.equal(err,null);
+        console.log(`findDocument: ${docs.length}`);
+        callback(docs);
+    });
+}
+
 router.get('/api/restaurant/name/:name', (req,res) => {
     if (req.params.name) {
         let criteria = {};
