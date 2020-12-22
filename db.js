@@ -26,7 +26,7 @@ const createDocument = (createDoc, callback) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
         const db = client.db(dbName);
-        db.collection('restaurants').insert(createDoc, (err, results) => {
+        db.collection('restaurants').insertOne(createDoc, (err, results) => {
                 client.close();
                 assert.equal(err, null);
                 callback(results);
@@ -165,7 +165,7 @@ const handle_Edit = (res, req, criteria) => {
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
-		        if (docs!=""){
+		        if (docs!="") {
 	              res.status(200).render('edit',{restaurant:docs[0]});
             } else {
                 res.status(200).render('info',{message:'You are not authorized'});
@@ -220,7 +220,6 @@ const handle_rateData = (res, criteria) => {
 const handle_Rate = (req,res, criteria) => {
     var DOCID = {};
     DOCID['_id'] = ObjectID(req.fields._id);
-    DOCID['grades']={$elemMatch:{user:req.session.username}};
     var rateDoc = {};
     rateDoc['score'] = req.fields.score;
     rateDoc['user'] = req.session.username;
@@ -235,30 +234,26 @@ const handle_Rate = (req,res, criteria) => {
 	          console.log(docs);
 	          console.log('here');
 	          assert.equal(err,null);
-          	if (docs="") {
-                updateRate(DOCID, rateDoc, (result) => {
-                    res.status(200).render('info',{message:'Success'});
-                });
-		        } else {
-                res.status(200).render('info',{message:'You have rated already'});
-            }
+		        for (let grades of docs[0].grades) {
+          		  if (grades['user']==req.session.username) {
+				            res.status(200).render('info',{message:'You are not able to rate'});
+			          }
+		        }
+            updateRate(DOCID, rateDoc, (result) => {
+                res.status(200).render('info',{message:'Success'});
+            });
         });
-    	});
+    });
 }
-
 const handle_Create = (req, res) => {
 	  var createDoc = {};
     createDoc['name'] = req.fields.name;
     createDoc['cuisine'] = req.fields.cuisine;
   	createDoc['borough'] = req.fields.borough;
   	createDoc['photo_mimetype'] = req.fields.photo_mimetype;
-  	createDoc['address.street'] = req.fields.street;
-  	createDoc['address.building'] = req.fields.building;
-  	createDoc['address.zipcode'] = req.fields.zipcode;
-  	createDoc['address.coord[0]'] = req.fields.gpslon;
-  	createDoc['address.coord[1]'] = req.fields.gpslat;
-  	createDoc['grades.user'] = req.session.username;
-  	createDoc['grades.score'] = req.fields.score;
+  	createDoc['address'] = { "street": req.fields.street, "building": req.fields.building, "coord": [req.fields.gpslat, req.fields.gpslon], "zipcode": req.fields.zipcode };
+	  createDoc['restaurant_id'] = req.fields.restaurantid;
+	  createDoc['grades'] = [];
   	createDoc['owner'] = req.session.username;
 	  if (req.files.filetoupload.size > 0) {
         fs.readFile(req.files.filetoupload.path, (err,data) => {
@@ -269,7 +264,7 @@ const handle_Create = (req, res) => {
 		    res.status(200).render('info',{message: 'Please login to create a new restaurant'});
 	  }
 	  createDocument(createDoc, (results) => {
-	      res.status(200).render('info',{message:`Created ${results.result.nModified} document`})
+	      res.status(200).render('info',{message:`Created ${results.insertedCount} document`});
 		});
 }
 
@@ -277,7 +272,7 @@ router.get('/create',(req,res)=>{
   	res.status(200).render('create',{name:req.session.username});
 });
 router.post('/create',(req,res)=>{
-  	handle_Create(req, res);
+  	handle_Create(req,res);
 });
 router.get('/display',(req,res)=>{
     handle_Details(res,req.query);
