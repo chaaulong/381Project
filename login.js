@@ -9,9 +9,8 @@ router.get('/login', (req,res) => {
 });
 
 router.post('/login', (req,res) => {
-
+  let valid = false;
 	users.forEach((user) => {
-		let valid = false;
 		if (user.name == req.body.username && user.password == req.body.password) {
 
 			req.session.authenticated = true;
@@ -19,12 +18,10 @@ router.post('/login', (req,res) => {
 			valid = true;
 
 		}
-
 	});
 	if (valid){
 		res.redirect('/');
-	}
-	res.redirect('/register');
+	} else {res.redirect('/register');}
 });
 
 
