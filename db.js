@@ -101,23 +101,13 @@ const handle_Remove = (res,req, criteria) => {
             assert.equal(err,null);
 		        if (docs!=""){
                 removeDocument(DOCID, (result) => {
-                    res.status(200).render('info',{message:'Delete is successful'});
+                    res.status(200).render('info',{name: req.session.username, message:'Delete is successful'});
                 });
 	          } else {
-  	            res.status(200).render('info',{message:'You are not authorized'});
+  	            res.status(200).render('info',{name: req.session.username, message:'You are not authorized'});
   	        }
         });
     });
-}
-const handle_Gmap = (res,criteria) =>{
-  	var lat = criteria._lat;
-  	var lon = criteria._lon;
-  	var map = L.map('mapid');
-  	map.setView(new L.LatLng(lat,lon), 12);
-  	var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-  	var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 16});
-  	map.addLayer(osm);
-  	res.status(200).render('map');
 }
 const handle_Search = (req, res, cri) => {
     let criteria = {};
@@ -137,7 +127,7 @@ const handle_Search = (req, res, cri) => {
     });
 
 }
-const handle_Details = (res, criteria) => {
+const handle_Details = (req, res, criteria) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
         assert.equal(null, err);
@@ -148,11 +138,11 @@ const handle_Details = (res, criteria) => {
         findDocument(db, DOCID, (docs) => {
             client.close();
             console.log("Closed DB connection");
-	          res.status(200).render('display',{restaurant:docs[0]});
+	          res.status(200).render('display',{name: req.session.username, restaurant:docs[0]});
         });
     });
 }
-const handle_Edit = (res, req, criteria) => {
+const handle_Edit = (req, res, criteria) => {
     let DOCID = {};
     const client = new MongoClient(mongourl);
     DOCID['_id'] = ObjectID(criteria._id);
@@ -166,9 +156,9 @@ const handle_Edit = (res, req, criteria) => {
             client.close();
             assert.equal(err,null);
 		        if (docs!="") {
-	              res.status(200).render('edit',{restaurant:docs[0]});
+	              res.status(200).render('edit',{name: req.session.username, restaurant:docs[0]});
             } else {
-                res.status(200).render('info',{message:'You are not authorized'});
+                res.status(200).render('info',{name: req.session.username, message:'You are not authorized'});
             }
         });
     });
@@ -178,6 +168,7 @@ const handle_Update = (req, res, criteria) => {
         DOCID['_id'] = ObjectID(req.fields._id);
         var updateDoc = {};
         updateDoc['name'] = req.fields.name;
+        updateDoc['restaurant_id'] = req.fields.restaurant_id;
         updateDoc['cuisine'] = req.fields.cuisine;
         updateDoc['borough'] = req.fields.borough;
         updateDoc['address.street'] = req.fields.street;
@@ -185,23 +176,18 @@ const handle_Update = (req, res, criteria) => {
         updateDoc['address.zipcode'] = req.fields.zipcode;
         updateDoc['address.coord[0]'] = req.fields.gpslat;
         updateDoc['address.coord[1]'] = req.fields.gpslon;
-        updateDoc['address.coord.0'] = req.fields.gpslat;
-        updateDoc['address.coord.1'] = req.fields.gpslon;
         if (req.files.filetoupload.size > 0) {
             fs.readFile(req.files.filetoupload.path, (err,data) => {
                 assert.equal(err,null);
                 updateDoc['photo'] = new Buffer.from(data).toString('base64');
-                updateDocument(DOCID, updateDoc, (results) => {
-		                res.status(200).render('info',{message:`Updated ${results.result.nModified} document(s)`})
-                });
-            });
-        } else {
-            updateDocument(DOCID, updateDoc, (results) => {
-	              res.status(200).render('info',{message:`Updated ${results.result.nModified} document(s)`})
             });
         }
+        updateDocument(DOCID, updateDoc, (results) => {
+	        res.status(200).render('info',{name: req.session.username, message:`Updated ${results.result.nModified} document(s)`})
+        });
+
 }
-const handle_rateData = (res, criteria) => {
+const handle_rateData = (req, res, criteria) => {
     const client = new MongoClient(mongourl);
     client.connect((err) => {
         assert.equal(null, err);
@@ -213,11 +199,11 @@ const handle_rateData = (res, criteria) => {
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
-	          res.status(200).render('rate',{restaurant:docs[0]});
+	          res.status(200).render('rate',{name: req.session.username, restaurant:docs[0]});
     		});
 	});
 }
-const handle_Rate = (req,res, criteria) => {
+const handle_Rate = (req, res) => {
     var DOCID = {};
     DOCID['_id'] = ObjectID(req.fields._id);
     var rateDoc = {};
@@ -234,14 +220,20 @@ const handle_Rate = (req,res, criteria) => {
 	          console.log(docs);
 	          console.log('here');
 	          assert.equal(err,null);
-		        for (let grades of docs[0].grades) {
-          		  if (grades['user']==req.session.username) {
-				            res.status(200).render('info',{message:'You are not able to rate'});
-			          }
-		        }
-            updateRate(DOCID, rateDoc, (result) => {
-                res.status(200).render('info',{message:'Success'});
-            });
+		  let valid = true;
+		  for (let grades of docs[0].grades) {
+          		if (grades['user']==req.session.username) {
+				            valid = false;
+					    break;
+			}
+		  }
+		  if (valid) {
+			updateRate(DOCID, rateDoc, (result) => {
+                		res.status(200).render('info',{name: req.session.username, message:'Success'});
+            		});
+		  } else {
+				res.status(200).render('info',{name: req.session.username, message:'You are not able to rate'});
+            	  }
         });
     });
 }
@@ -252,7 +244,7 @@ const handle_Create = (req, res) => {
   	createDoc['borough'] = req.fields.borough;
   	createDoc['photo_mimetype'] = req.fields.photo_mimetype;
   	createDoc['address'] = { "street": req.fields.street, "building": req.fields.building, "coord": [req.fields.gpslat, req.fields.gpslon], "zipcode": req.fields.zipcode };
-	  createDoc['restaurant_id'] = req.fields.restaurantid;
+	  createDoc['restaurant_id'] = req.fields.restaurant_id;
 	  createDoc['grades'] = [];
   	createDoc['owner'] = req.session.username;
 	  if (req.files.filetoupload.size > 0) {
@@ -261,10 +253,10 @@ const handle_Create = (req, res) => {
                 createDoc['photo'] = new Buffer.from(data).toString('base64');
         });
     } if (!req.session.authenticated) {
-		    res.status(200).render('info',{message: 'Please login to create a new restaurant'});
+		    res.status(200).render('info',{name: req.session.username, message: 'Please login to create a new restaurant'});
 	  }
 	  createDocument(createDoc, (results) => {
-	      res.status(200).render('info',{message:`Created ${results.insertedCount} document`});
+	      res.status(200).render('info',{name: req.session.username, message:`Created ${results.insertedCount} document`});
 		});
 }
 
@@ -275,10 +267,10 @@ router.post('/create',(req,res)=>{
   	handle_Create(req,res);
 });
 router.get('/display',(req,res)=>{
-    handle_Details(res,req.query);
+    handle_Details(req,res,req.query);
 });
 router.get('/edit',(req,res)=>{
-	  handle_Edit(res,req,req.query);
+	  handle_Edit(req,res,req.query);
 });
 router.get('/delete',(req,res)=>{
   	handle_Remove(res,req,req.query);
@@ -290,10 +282,10 @@ router.post('/search',(req,res)=>{
   	handle_Search(req,res,req.fields);
 });
 router.get('/rate',(req,res)=>{
-  	handle_rateData(res,req.query);
+  	handle_rateData(req,res,req.query);
 });
 router.post('/rated',(req,res)=>{
-  	handle_Rate(req,res,req.query);
+  	handle_Rate(req,res);
 });
 
 module.exports = router;

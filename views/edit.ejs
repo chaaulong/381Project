@@ -1,17 +1,189 @@
 <html>
-    <body>
-        <form action="update" method="POST" enctype="multipart/form-data">
-            	Name: <input name="name" value=<%= restaurant.name %>><br>
-		borough: <input name="borough" value=<%= restaurant.borough %>><br>
-             	Cuisine: <input name="cuisine" value=<%= restaurant.cuisine %> /><br>
-		Street: <input name="street" value=<%= restaurant.address.street %> /><br>
-		Building: <input name="building" value=<%= restaurant.address.building %> /><br>
-		Zipcode: <input name="zipcode" value=<%= restaurant.address.zipcode %> /><br>
-		GPS Coordinates (lat.): <input name="gpslat" value=<%= restaurant.address.coord[0] %> /><br>
-		GPS Coordinates (lon.): <input name="gpslon" value=<%= restaurant.address.coord[1] %> /><br>
-    Photo: <input type="file" name="filetoupload"><br>
-            <input type="hidden" name="_id" value=<%= restaurant._id %>>
-            <input type="submit" value="update">
-        </form>
-    </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Main">
+  <meta name="author" content="Care We Are">
+
+    <title>Main</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">User: <%= name %></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+           <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
+       <div class="form-group">
+         <div class="input-group">
+           <div class="input-group">
+             <select class="form-control" id="filter" name="filter">
+               <option value="name" selected>Name</option>
+               <option value="borough">Borough</option>
+               <option value="cuisine">Cuisine</option>
+             </select>
+           </div>
+           <input type="text" class="form-control" placeholder="Search" name="name">
+           <span class="input-group-btn">
+<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+           </span>
+         </div>
+       </div>
+     </form>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Create a restaurant
+              <span class="sr-only">(current)</span>
+	    </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center pt-4">
+<form action="/update" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+  <div class="form-row">
+    <div class="col-md-6 mb-3">
+      <label for="validationTooltip01">Name</label>
+      <input type="text" class="form-control" id="validationTooltip01" name="name" value=<%= restaurant.name %> required>
+      <div class="invalid-tooltip">
+        Please provide a valid restaurant name.
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="validationTooltip02">Restaurant ID</label>
+      <input type="text" class="form-control" id="validationTooltip02" name="restaurant_id" value=<%= restaurant.restaurant_id %>>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="validationTooltip03">Borough</label>
+      <input type="text" class="form-control" id="validationTooltip03" name="borough" value=<%= restaurant.borough %> required>
+      <div class="invalid-tooltip">
+        Please provide a valid borough.
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-6 mb-3">
+      <label for="validationTooltip04">Cuisine</label>
+      <input type="text" class="form-control" id="validationTooltip04" name="cuisine" value=<%= restaurant.cuisine %> required>
+      <div class="invalid-tooltip">
+        Please select a valid cuisine.
+      </div>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="validationTooltip05">Street</label>
+      <input type="text" class="form-control" id="validationTooltip05" name="street" value=<%= restaurant.address.street %> required>
+      <div class="invalid-tooltip">
+        Please provide a valid street.
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-8 mb-3">
+      <label for="validationTooltip06">Building</label>
+      <input type="text" class="form-control" id="validationTooltip06" name="building" value=<%= restaurant.address.building %> required>
+      <div class="invalid-tooltip">
+        Please provide a valid building.
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="validationTooltip07">Zipcode</label>
+      <input type="text" class="form-control" id="validationTooltip07" name="zipcode" value=<%= restaurant.address.zipcode %>>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-6 mb-3">
+      <label for="validationTooltip08">GPS Coordinates (lat.)</label>
+      <input type="text" class="form-control" id="validationTooltip08" name="gpslat" value=<%= restaurant.address.coord[0] %>>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="validationTooltip09">GPS Coordinates (lon.)</label>
+      <input type="text" class="form-control" id="validationTooltip09" name="gpslon"value=<%= restaurant.address.coord[1] %>>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-8 mb-3 custom-file">
+
+        <input type="file" class="custom-file-input" id="customFile" name="filetoupload">
+        <label class="custom-file-label" for="customFile">Choose your restaurant photo (optional)</label>
+
+      <input type="hidden" name="_id" value=<%= restaurant._id %>>
+    </div>
+    <div class="col-md-4 mb-3">
+      <button class="btn btn-dark" type="submit">Submit</button>
+    </div>
+  </div>
+</form>
+      </div>
+    </div>
+  </div>
+
+    <!-- JavaScript for disabling form submissions if there are invalid fields -->
+    <script>
+        // Self-executing function
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+$(document).ready(function () {
+  bsCustomFileInput.init()
+});
+    </script>
+
+<style>
+input{
+  margin-bottom: 15px
+}
+h1, h2{
+  text-align: center
+}
+.container{
+  width:50%
+}
+.input-group-addon.select-input {
+  width: 20%;
+  padding: 0;
+}
+
+.input-group-addon.select-input select {
+  border: none;
+  height: 32px;
+}
+</style>
+
+</body>
 </html>
