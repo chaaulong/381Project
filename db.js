@@ -101,7 +101,7 @@ const handle_Remove = (res,req, criteria) => {
             assert.equal(err,null);
 		        if (docs!=""){
                 removeDocument(DOCID, (results) => {
-                    res.status(200).render('info',{name: req.session.username, message:`Deleted ${results.deletedCount} document(s)`});
+                    res.status(200).render('info',{name: req.session.username, message:`Deleted 1 document`});
                 });
 	          } else {
   	            res.status(200).render('info',{name: req.session.username, message:'You are not authorized'});
