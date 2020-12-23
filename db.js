@@ -101,7 +101,7 @@ const handle_Remove = (res,req, criteria) => {
             assert.equal(err,null);
 		        if (docs!=""){
                 removeDocument(DOCID, (result) => {
-                    res.status(200).render('info',{name: req.session.username, message:'Delete is successful'});
+                    res.status(200).render('info',{name: req.session.username, message:`Deleted ${results.result.nModified} document(s)`});
                 });
 	          } else {
   	            res.status(200).render('info',{name: req.session.username, message:'You are not authorized'});
@@ -199,7 +199,18 @@ const handle_rateData = (req, res, criteria) => {
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
-	          res.status(200).render('rate',{name: req.session.username, restaurant:docs[0]});
+            let valid = true;
+		        for (let grades of docs[0].grades) {
+          	    if (grades['user']==req.session.username) {
+				            valid = false;
+					          break;
+			          }
+		        }
+		        if (valid) {
+			          res.status(200).render('rate',{name: req.session.username, restaurant:docs[0]});
+		        } else {
+				        res.status(200).render('info',{name: req.session.username, message:'You are not able to rate'});
+            }
     		});
 	});
 }
@@ -220,20 +231,9 @@ const handle_Rate = (req, res) => {
 	          console.log(docs);
 	          console.log('here');
 	          assert.equal(err,null);
-		        let valid = true;
-		        for (let grades of docs[0].grades) {
-          	    if (grades['user']==req.session.username) {
-				            valid = false;
-					          break;
-			          }
-		        }
-		        if (valid) {
-			          updateRate(DOCID, rateDoc, (result) => {
-                    res.status(200).render('info',{name: req.session.username, message:'Success'});
-                });
-		        } else {
-				        res.status(200).render('info',{name: req.session.username, message:'You are not able to rate'});
-            }
+			      updateRate(DOCID, rateDoc, (result) => {
+                res.status(200).render('info',{name: req.session.username, message:'Success'});
+            });
         });
     });
 }
