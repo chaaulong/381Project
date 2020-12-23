@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const session = require('cookie-session');
-const users = new Array(
-	{name: 'demo', password: ''},
-	{name: 'student', password: ''}
-);
+const users = [{name: 'demo', password: ''}, {name: 'student', password: ''}];
 
 
 router.get('/login', (req,res) => {
