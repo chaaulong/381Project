@@ -100,8 +100,8 @@ const handle_Remove = (res,req, criteria) => {
             client.close();
             assert.equal(err,null);
 		        if (docs!=""){
-                removeDocument(DOCID, (result) => {
-                    res.status(200).render('info',{name: req.session.username, message:'Delete is successful'});
+                removeDocument(DOCID, (results) => {
+                    res.status(200).render('info',{name: req.session.username, message:`Deleted 1 document`});
                 });
 	          } else {
   	            res.status(200).render('info',{name: req.session.username, message:'You are not authorized'});
@@ -174,8 +174,7 @@ const handle_Update = (req, res, criteria) => {
         updateDoc['address.street'] = req.fields.street;
         updateDoc['address.building'] = req.fields.building;
         updateDoc['address.zipcode'] = req.fields.zipcode;
-        updateDoc['address.coord[0]'] = req.fields.gpslat;
-        updateDoc['address.coord[1]'] = req.fields.gpslon;
+        updateDoc['address.coord'] = [req.fields.gpslat, req.fields.gpslon];
         if (req.files.filetoupload.size > 0) {
             fs.readFile(req.files.filetoupload.path, (err,data) => {
                 assert.equal(err,null);
@@ -199,7 +198,18 @@ const handle_rateData = (req, res, criteria) => {
         cursor.toArray((err,docs) => {
             client.close();
             assert.equal(err,null);
-	          res.status(200).render('rate',{name: req.session.username, restaurant:docs[0]});
+            let valid = true;
+		        for (let grades of docs[0].grades) {
+          	    if (grades['user']==req.session.username) {
+				            valid = false;
+					          break;
+			          }
+		        }
+		        if (valid) {
+			          res.status(200).render('rate',{name: req.session.username, restaurant:docs[0]});
+		        } else {
+				        res.status(200).render('info',{name: req.session.username, message:'You are not able to rate'});
+            }
     		});
 	});
 }
@@ -220,20 +230,9 @@ const handle_Rate = (req, res) => {
 	          console.log(docs);
 	          console.log('here');
 	          assert.equal(err,null);
-		        let valid = true;
-		        for (let grades of docs[0].grades) {
-          	    if (grades['user']==req.session.username) {
-				            valid = false;
-					          break;
-			          }
-		        }
-		        if (valid) {
-			          updateRate(DOCID, rateDoc, (result) => {
-                    res.status(200).render('info',{name: req.session.username, message:'Success'});
-                });
-		        } else {
-				        res.status(200).render('info',{name: req.session.username, message:'You are not able to rate'});
-            }
+			      updateRate(DOCID, rateDoc, (result) => {
+                res.status(200).render('info',{name: req.session.username, message:'Success'});
+            });
         });
     });
 }

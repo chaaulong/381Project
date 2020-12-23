@@ -80,7 +80,7 @@
           <dd class="col-sm-9"><%= restaurant.address.building %></dd>
 
           <dt class="col-sm-3">Zipcode</dt>
-          <dd class="col-sm-9"><%= restaurant.zipcode %></dd>
+          <dd class="col-sm-9"><%= restaurant.address.zipcode %></dd>
 
           <dt class="col-sm-3">Rating</dt>
           <dd class="col-sm-9">
@@ -92,7 +92,7 @@
 
           <dt class="col-sm-3">Created by</dt>
           <dd class="col-sm-9"><%= restaurant.owner %></dd>
-            <% if (restaurant.address.coord) { %>
+            <% if (restaurant.address.coord[0]!="" && restaurant.address.coord[1]!="") { %>
               <dt class="col-sm-3">GPS Coordinates</dt>
               <dd class="col-sm-9"><%=JSON.stringify(restaurant.address.coord)%></dd>
               <div id="mapid" style="width: 600px; height: 400px;" class="col-sm-12"></div>
