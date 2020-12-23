@@ -1,0 +1,93 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BasicAuth">
+  <meta name="author" content="siddub">
+
+    <title>Search</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <p>Welcome, <%= name %></p>
+      </div>
+      <div class="col">
+        <a href='/logout'>Logout</a>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+  	<h1>Search Results</h1>
+  	<h2>Showing <%= locals.count %> documents</h2>
+      <div class="flex-row d-flex flex-wrap justify-content-center">
+        <div class="col-sm-3 col-md-6 col-lg-4">
+          <a href="/" class="btn btn-primary" role="button">Back</a>
+        </div>
+        <div class="col-sm-9 col-md-6 col-lg-8">
+       <form class="form-inline" action="/search" method="POST" enctype="multipart/form-data">
+         <div class="form-group">
+           <div class="input-group">
+             <div class="input-group-addon select-input">
+               <select class="form-control" id="filter" name="filter">
+                 <option value="name" selected>Name</option>
+                 <option value="borough">Borough</option>
+                 <option value="cuisine">Cuisine</option>
+               </select>
+             </div>
+             <input type="text" class="form-control" placeholder="Search" name="name">
+             <span class="input-group-btn">
+  <button class="btn btn-md btn-primary" type="submit">Submit</button>
+             </span>
+           </div>
+         </div>
+       </form>
+        </div>
+
+      </div>
+      <hr>
+  		<table>
+  		    <% for(var i=0; i < locals.count; i++) { %>
+            <tr>
+              <td><%= i+1 %>. <a href="/display?_id=<%= restaurants[i]._id %>"><%= restaurants[i].name %></a></td>
+            </tr>
+          <% } %>
+      </table>
+  </div>
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+
+  <style>
+  input{
+    margin-bottom: 15px
+  }
+  h1, h2{
+    text-align: center
+  }
+  .container{
+    width:50%
+  }
+  .input-group-addon.select-input {
+    width: 20%;
+    padding: 0;
+  }
+
+  .input-group-addon.select-input select {
+    border: none;
+    height: 32px;
+  }
+  </style>
+
+</body>
+</html>
