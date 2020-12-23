@@ -100,7 +100,7 @@ const handle_Remove = (res,req, criteria) => {
             client.close();
             assert.equal(err,null);
 		        if (docs!=""){
-                removeDocument(DOCID, (result) => {
+                removeDocument(DOCID, (results) => {
                     res.status(200).render('info',{name: req.session.username, message:`Deleted ${results.result.nModified} document(s)`});
                 });
 	          } else {
