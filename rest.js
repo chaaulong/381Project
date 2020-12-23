@@ -5,7 +5,7 @@ const ObjectID = require('mongodb').ObjectID;
 const assert = require('assert');
 const http = require('http');
 const url = require('url');
-const mongourl = 'mongodb+srv://dt:s12166654@cluster0.yrpcm.mongodb.net/restaurant?retryWrites=true&w=majority';
+const mongourl = '';
 const dbName = 'restaurant';
 
 const findDocument = (db, criteria, callback) => {

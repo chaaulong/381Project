@@ -5,7 +5,7 @@ const http = require('http');
 const url = require('url');
 var express = require('express');
 var router = express.Router();
-const mongourl = 'mongodb+srv://dt:s12166654@cluster0.yrpcm.mongodb.net/restaurant?retryWrites=true&w=majority';
+const mongourl = '';
 const fs = require('fs');
 const formidable = require('express-formidable');
 const dbName = 'restaurant';
