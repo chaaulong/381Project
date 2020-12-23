@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const session = require('cookie-session');
 const users = new Array(
-	{name: 'demo', password: ''}
+	{name: 'demo', password: ''},
+	{name: 'student', password: ''}
 );
 
 
