@@ -174,8 +174,7 @@ const handle_Update = (req, res, criteria) => {
         updateDoc['address.street'] = req.fields.street;
         updateDoc['address.building'] = req.fields.building;
         updateDoc['address.zipcode'] = req.fields.zipcode;
-        updateDoc['address.coord[0]'] = req.fields.gpslat;
-        updateDoc['address.coord[1]'] = req.fields.gpslon;
+        updateDoc['address.coord'] = [req.fields.gpslat, req.fields.gpslon];
         if (req.files.filetoupload.size > 0) {
             fs.readFile(req.files.filetoupload.path, (err,data) => {
                 assert.equal(err,null);
