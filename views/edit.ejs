@@ -23,7 +23,7 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-           <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
+      <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
        <div class="form-group">
          <div class="input-group">
            <div class="input-group">
@@ -35,104 +35,103 @@
            </div>
            <input type="text" class="form-control" placeholder="Search" name="name">
            <span class="input-group-btn">
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
            </span>
          </div>
        </div>
      </form>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/create">Create a restaurant</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-
-    </div>
+     <div class="collapse navbar-collapse" id="navbarResponsive">
+       <ul class="navbar-nav ml-auto">
+         <li class="nav-item">
+           <a class="nav-link" href="/">Home</a>
+         </li>
+         <li class="nav-item active">
+           <a class="nav-link" href="/create">Create a restaurant</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="/logout">Logout</a>
+         </li>
+       </ul>
+     </div>
+   </div>
   </nav>
 
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center pt-4">
-<form action="/update" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-  <div class="form-row">
-    <div class="col-md-6 mb-3">
-      <label for="validationTooltip01">Name</label>
-      <input type="text" class="form-control" id="validationTooltip01" name="name" value=<%= restaurant.name %> required>
-      <div class="invalid-tooltip">
-        Please provide a valid restaurant name.
-      </div>
-    </div>
-    <div class="col-md-3 mb-3">
-      <label for="validationTooltip02">Restaurant ID</label>
-      <input type="text" class="form-control" id="validationTooltip02" name="restaurant_id" value=<%= restaurant.restaurant_id %>>
-    </div>
-    <div class="col-md-3 mb-3">
-      <label for="validationTooltip03">Borough</label>
-      <input type="text" class="form-control" id="validationTooltip03" name="borough" value=<%= restaurant.borough %> required>
-      <div class="invalid-tooltip">
-        Please provide a valid borough.
-      </div>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="col-md-6 mb-3">
-      <label for="validationTooltip04">Cuisine</label>
-      <input type="text" class="form-control" id="validationTooltip04" name="cuisine" value=<%= restaurant.cuisine %> required>
-      <div class="invalid-tooltip">
-        Please select a valid cuisine.
-      </div>
-    </div>
-    <div class="col-md-6 mb-3">
-      <label for="validationTooltip05">Street</label>
-      <input type="text" class="form-control" id="validationTooltip05" name="street" value=<%= restaurant.address.street %> required>
-      <div class="invalid-tooltip">
-        Please provide a valid street.
-      </div>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="col-md-8 mb-3">
-      <label for="validationTooltip06">Building</label>
-      <input type="text" class="form-control" id="validationTooltip06" name="building" value=<%= restaurant.address.building %> required>
-      <div class="invalid-tooltip">
-        Please provide a valid building.
-      </div>
-    </div>
-    <div class="col-md-4 mb-3">
-      <label for="validationTooltip07">Zipcode</label>
-      <input type="text" class="form-control" id="validationTooltip07" name="zipcode" value=<%= restaurant.address.zipcode %>>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="col-md-6 mb-3">
-      <label for="validationTooltip08">GPS Coordinates (lat.)</label>
-      <input type="text" class="form-control" id="validationTooltip08" name="gpslat" value=<%= restaurant.address.coord[0] %>>
-    </div>
-    <div class="col-md-6 mb-3">
-      <label for="validationTooltip09">GPS Coordinates (lon.)</label>
-      <input type="text" class="form-control" id="validationTooltip09" name="gpslon"value=<%= restaurant.address.coord[1] %>>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="col-md-8 mb-3 custom-file">
+        <form action="/update" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationTooltip01">Name</label>
+              <input type="text" class="form-control" id="validationTooltip01" name="name" value=<%= restaurant.name %> required>
+              <div class="invalid-tooltip">
+                Please provide a valid restaurant name.
+              </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="validationTooltip02">Restaurant ID</label>
+              <input type="text" class="form-control" id="validationTooltip02" name="restaurant_id" value=<%= restaurant.restaurant_id %>>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label for="validationTooltip03">Borough</label>
+              <input type="text" class="form-control" id="validationTooltip03" name="borough" value=<%= restaurant.borough %> required>
+              <div class="invalid-tooltip">
+                Please provide a valid borough.
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationTooltip04">Cuisine</label>
+              <input type="text" class="form-control" id="validationTooltip04" name="cuisine" value=<%= restaurant.cuisine %> required>
+              <div class="invalid-tooltip">
+                Please select a valid cuisine.
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="validationTooltip05">Street</label>
+              <input type="text" class="form-control" id="validationTooltip05" name="street" value=<%= restaurant.address.street %> required>
+              <div class="invalid-tooltip">
+                Please provide a valid street.
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-8 mb-3">
+              <label for="validationTooltip06">Building</label>
+              <input type="text" class="form-control" id="validationTooltip06" name="building" value=<%= restaurant.address.building %> required>
+              <div class="invalid-tooltip">
+                Please provide a valid building.
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="validationTooltip07">Zipcode</label>
+              <input type="text" class="form-control" id="validationTooltip07" name="zipcode" value=<%= restaurant.address.zipcode %>>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationTooltip08">GPS Coordinates (lat.)</label>
+              <input type="text" class="form-control" id="validationTooltip08" name="gpslat" value=<%= restaurant.address.coord[0] %>>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="validationTooltip09">GPS Coordinates (lon.)</label>
+              <input type="text" class="form-control" id="validationTooltip09" name="gpslon"value=<%= restaurant.address.coord[1] %>>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-8 mb-3 custom-file">
 
-        <input type="file" class="custom-file-input" id="customFile" name="filetoupload">
-        <label class="custom-file-label" for="customFile">Choose your restaurant photo (optional)</label>
+                <input type="file" class="custom-file-input" id="customFile" name="filetoupload">
+                <label class="custom-file-label" for="customFile">Choose your restaurant photo (optional)</label>
 
-      <input type="hidden" name="_id" value=<%= restaurant._id %>>
-    </div>
-    <div class="col-md-4 mb-3">
-      <button class="btn btn-dark" type="submit">Submit</button>
-    </div>
-  </div>
-</form>
+              <input type="hidden" name="_id" value=<%= restaurant._id %>>
+            </div>
+            <div class="col-md-4 mb-3">
+              <button class="btn btn-dark" type="submit">Submit</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -171,15 +170,6 @@ h1, h2{
 }
 .container{
   width:50%
-}
-.input-group-addon.select-input {
-  width: 20%;
-  padding: 0;
-}
-
-.input-group-addon.select-input select {
-  border: none;
-  height: 32px;
 }
 </style>
 

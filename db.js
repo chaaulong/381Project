@@ -207,7 +207,7 @@ const handle_Rate = (req, res) => {
     var DOCID = {};
     DOCID['_id'] = ObjectID(req.fields._id);
     var rateDoc = {};
-    rateDoc['score'] = req.fields.score;
+    rateDoc['score'] = parseInt(req.fields.score);
     rateDoc['user'] = req.session.username;
     const client = new MongoClient(mongourl);
     client.connect((err) => {
@@ -220,20 +220,20 @@ const handle_Rate = (req, res) => {
 	          console.log(docs);
 	          console.log('here');
 	          assert.equal(err,null);
-		  let valid = true;
-		  for (let grades of docs[0].grades) {
-          		if (grades['user']==req.session.username) {
+		        let valid = true;
+		        for (let grades of docs[0].grades) {
+          	    if (grades['user']==req.session.username) {
 				            valid = false;
-					    break;
-			}
-		  }
-		  if (valid) {
-			updateRate(DOCID, rateDoc, (result) => {
-                		res.status(200).render('info',{name: req.session.username, message:'Success'});
-            		});
-		  } else {
-				res.status(200).render('info',{name: req.session.username, message:'You are not able to rate'});
-            	  }
+					          break;
+			          }
+		        }
+		        if (valid) {
+			          updateRate(DOCID, rateDoc, (result) => {
+                    res.status(200).render('info',{name: req.session.username, message:'Success'});
+                });
+		        } else {
+				        res.status(200).render('info',{name: req.session.username, message:'You are not able to rate'});
+            }
         });
     });
 }

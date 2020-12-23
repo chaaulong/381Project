@@ -21,7 +21,7 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-           <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
+      <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
        <div class="form-group">
          <div class="input-group">
            <div class="input-group">
@@ -33,54 +33,53 @@
            </div>
            <input type="text" class="form-control" placeholder="Search" name="name">
            <span class="input-group-btn">
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
            </span>
          </div>
        </div>
      </form>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/create">Create a restaurant</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-
-    </div>
+     <div class="collapse navbar-collapse" id="navbarResponsive">
+       <ul class="navbar-nav ml-auto">
+         <li class="nav-item active">
+           <a class="nav-link" href="#">Home
+             <span class="sr-only">(current)</span>
+           </a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="/create">Create a restaurant</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="/logout">Logout</a>
+         </li>
+       </ul>
+     </div>
+   </div>
   </nav>
 
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h1 class="mt-5">Showing <%= locals.count %> restaurants</h1>
-<table class="table">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Cuisine</th>
-      <th scope="col">Borough</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% for(var i=0; i < locals.count; i++) { %>
-    <tr>
-      <th scope="row"><%= i+1 %></th>
-      <td><a href="/display?_id=<%= restaurants[i]._id %>"><%= restaurants[i].name %></a></td>
-      <td><%= restaurants[i].cuisine %></td>
-      <td><%= restaurants[i].borough %></td>
-    </tr>
-    <% } %>
-  </tbody>
-</table>
+        <h1 class="mt-5">Showing <%= locals.count %> restaurant(s)</h1>
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Cuisine</th>
+              <th scope="col">Borough</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i < locals.count; i++) { %>
+            <tr>
+              <th scope="row"><%= i+1 %></th>
+              <td><a href="/display?_id=<%= restaurants[i]._id %>"><%= restaurants[i].name %></a></td>
+              <td><%= restaurants[i].cuisine %></td>
+              <td><%= restaurants[i].borough %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -95,15 +94,6 @@ h1, h2{
 }
 .container{
   width:50%
-}
-.input-group-addon.select-input {
-  width: 20%;
-  padding: 0;
-}
-
-.input-group-addon.select-input select {
-  border: none;
-  height: 32px;
 }
 </style>
 

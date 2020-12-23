@@ -23,7 +23,7 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-           <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
+      <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
        <div class="form-group">
          <div class="input-group">
            <div class="input-group">
@@ -35,91 +35,90 @@
            </div>
            <input type="text" class="form-control" placeholder="Search" name="name">
            <span class="input-group-btn">
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
            </span>
          </div>
        </div>
      </form>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/create">Create a restaurant</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-          </li>
-        </ul>
-      </div>
-
-    </div>
+     <div class="collapse navbar-collapse" id="navbarResponsive">
+       <ul class="navbar-nav ml-auto">
+         <li class="nav-item">
+           <a class="nav-link" href="/">Home</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="/create">Create a restaurant</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="/logout">Logout</a>
+         </li>
+       </ul>
+     </div>
+   </div>
   </nav>
 
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
         <h1 class="mt-5"><%= restaurant.name %></h1>
-    <% if (restaurant.photo) { %>
+          <% if (restaurant.photo) { %>
             <img src="data:image/jpg;base64, <%= restaurant.photo %>"><br>
-    <% } %>
-<dl class="row">
-  <dt class="col-sm-3">Restaurant ID</dt>
-  <dd class="col-sm-9"><%= restaurant.restaurant_id %></dd>
+          <% } %>
+        <dl class="row">
+          <dt class="col-sm-3">Restaurant ID</dt>
+          <dd class="col-sm-9"><%= restaurant.restaurant_id %></dd>
 
-  <dt class="col-sm-3">Borough</dt>
-  <dd class="col-sm-9"><%= restaurant.borough %></dd>
+          <dt class="col-sm-3">Borough</dt>
+          <dd class="col-sm-9"><%= restaurant.borough %></dd>
 
-  <dt class="col-sm-3">Cuisine</dt>
-  <dd class="col-sm-9"><%= restaurant.cuisine %></dd>
+          <dt class="col-sm-3">Cuisine</dt>
+          <dd class="col-sm-9"><%= restaurant.cuisine %></dd>
 
-  <dt class="col-sm-3">Street</dt>
-  <dd class="col-sm-9"><%= restaurant.address.street %></dd>
+          <dt class="col-sm-3">Street</dt>
+          <dd class="col-sm-9"><%= restaurant.address.street %></dd>
 
-  <dt class="col-sm-3">Building</dt>
-  <dd class="col-sm-9"><%= restaurant.address.building %></dd>
+          <dt class="col-sm-3">Building</dt>
+          <dd class="col-sm-9"><%= restaurant.address.building %></dd>
 
-  <dt class="col-sm-3">Zipcode</dt>
-  <dd class="col-sm-9"><%= restaurant.zipcode %></dd>
+          <dt class="col-sm-3">Zipcode</dt>
+          <dd class="col-sm-9"><%= restaurant.zipcode %></dd>
 
-  <dt class="col-sm-3">Rating</dt>
-  <dd class="col-sm-9">	      <ol type="1">
-	         <% for (var r of (restaurant.grades)){ %>
-	            <li> <%=JSON.stringify(r.score)%>(<%=JSON.stringify(r.user)%>)</li>
-	         <%}%>
-	      </ol></dd>
+          <dt class="col-sm-3">Rating</dt>
+          <dd class="col-sm-9">
+            <ol type="1">
+        	    <% for (var r of (restaurant.grades)){ %>
+        	      <li> <%=JSON.stringify(r.score)%>(<%=JSON.stringify(r.user)%>)</li>
+        	    <%}%>
+        	  </ol></dd>
 
-  <dt class="col-sm-3">Created by</dt>
-  <dd class="col-sm-9"><%= restaurant.owner %></dd>
-<% if (restaurant.address.coord) { %>
+          <dt class="col-sm-3">Created by</dt>
+          <dd class="col-sm-9"><%= restaurant.owner %></dd>
+            <% if (restaurant.address.coord) { %>
+              <dt class="col-sm-3">GPS Coordinates</dt>
+              <dd class="col-sm-9"><%=JSON.stringify(restaurant.address.coord)%></dd>
+              <div id="mapid" style="width: 600px; height: 400px;" class="col-sm-12"></div>
+              <ul>
+                <script>
+                	var mymap = L.map('mapid').setView([<%=restaurant.address.coord[0]%>,<%=restaurant.address.coord[1]%>], 12);
+                	var marker = L.marker([<%=restaurant.address.coord[0]%>,<%=restaurant.address.coord[1]%>]).addTo(mymap);
+                	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
+                		{
+                		maxZoom: 18,
+                		id: 'mapbox/streets-v11',
+                		tileSize: 512,
+                		zoomOffset: -1
+                		}).addTo(mymap);
+                </script>
+              </ul>
+            <% } %>
+        </dl>
 
-  <dt class="col-sm-3">GPS Coordinates</dt>
-  <dd class="col-sm-9"><%=JSON.stringify(restaurant.address.coord)%></dd>
-<div id="mapid" style="width: 600px; height: 400px;" class="col-sm-12"></div>
-<ul>
-<script>
-	var mymap = L.map('mapid').setView([<%=restaurant.address.coord[0]%>,<%=restaurant.address.coord[1]%>], 12);
-	var marker = L.marker([<%=restaurant.address.coord[0]%>,<%=restaurant.address.coord[1]%>]).addTo(mymap);
-	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
-		{
-		maxZoom: 18,
-		id: 'mapbox/streets-v11',
-		tileSize: 512,
-		zoomOffset: -1
-		}).addTo(mymap);
-</script>
-</ul>
-<% } %>
-</dl>
-
-<div class="btn-group pb-4" role="group">
-  <a type="button" class="btn btn-dark" href="/rate?_id=<%= restaurant._id %>&name=<%= restaurant.name %>">Rate</a>
-<% if (name == restaurant.owner) { %>
-  <a type="button" class="btn btn-dark" href="/edit?_id=<%= restaurant._id %>">Edit</a>
-  <a type="button" class="btn btn-dark" href="/delete?_id=<%= restaurant._id %>">Delete</a>
-<% } %>
-</div>
+        <div class="btn-group pb-4" role="group">
+          <a type="button" class="btn btn-dark" href="/rate?_id=<%= restaurant._id %>&name=<%= restaurant.name %>">Rate</a>
+            <% if (name == restaurant.owner) { %>
+              <a type="button" class="btn btn-dark" href="/edit?_id=<%= restaurant._id %>">Edit</a>
+              <a type="button" class="btn btn-dark" href="/delete?_id=<%= restaurant._id %>">Delete</a>
+            <% } %>
+        </div>
       </div>
     </div>
   </div>
@@ -133,15 +132,6 @@ h1, h2{
 }
 .container{
   width:50%
-}
-.input-group-addon.select-input {
-  width: 20%;
-  padding: 0;
-}
-
-.input-group-addon.select-input select {
-  border: none;
-  height: 32px;
 }
 </style>
 

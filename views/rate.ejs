@@ -22,7 +22,7 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-           <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
+      <form class="form-inline my-0" action="/search" method="POST" enctype="multipart/form-data">
        <div class="form-group">
          <div class="input-group">
            <div class="input-group">
@@ -34,46 +34,45 @@
            </div>
            <input type="text" class="form-control" placeholder="Search" name="name">
            <span class="input-group-btn">
-<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
            </span>
          </div>
        </div>
      </form>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/create">Create a restaurant</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
-          </li>
-        </ul>
+     <div class="collapse navbar-collapse" id="navbarResponsive">
+       <ul class="navbar-nav ml-auto">
+         <li class="nav-item">
+           <a class="nav-link" href="/">Home</a>
+         </li>
+         <li class="nav-item active">
+           <a class="nav-link" href="/create">Create a restaurant</a>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="/logout">Logout</a>
+         </li>
+       </ul>
       </div>
-
     </div>
   </nav>
 
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center pt-4">
-<form action="/rated" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-  <div class="form-row">
-    <div class="col-md-6 mb-3">
-      <label for="validationTooltip01">Score (1-10):</label>
-      <input type="number" class="form-control" id="validationTooltip01" name="score" min=1 max=10 required>
-      <div class="invalid-tooltip">
-        Please provide a valid score.
-      </div>
-    </div>
-    <div class="col-md-6 mb-3 pt-3">
-      <input type="hidden" name="_id" value=<%= restaurant._id %>>
-      <button class="btn btn-dark" type="submit">Submit</button>
-    </div>
-  </div>
-</form>
+        <form action="/rated" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationTooltip01">Score (1-10):</label>
+              <input type="number" class="form-control" id="validationTooltip01" name="score" min=1 max=10 required>
+              <div class="invalid-tooltip">
+                Please provide a valid score.
+              </div>
+            </div>
+            <div class="col-md-6 mb-3 pt-3">
+              <input type="hidden" name="_id" value=<%= restaurant._id %>>
+              <button class="btn btn-dark" type="submit">Submit</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -109,15 +108,6 @@ h1, h2{
 }
 .container{
   width:50%
-}
-.input-group-addon.select-input {
-  width: 20%;
-  padding: 0;
-}
-
-.input-group-addon.select-input select {
-  border: none;
-  height: 32px;
 }
 </style>
 
