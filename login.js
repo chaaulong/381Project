@@ -20,10 +20,10 @@ router.post('/login', (req,res) => {
 
 		}
 		if (valid){
-			res.redirect('/register');
+			res.redirect('/');
 		}
 	});
-	res.redirect('/');
+	res.redirect('/register');
 });
 
 
