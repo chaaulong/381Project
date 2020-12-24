@@ -1,5 +1,9 @@
 # COMPS381F Project
 This is an Express server that provides basic CRUD services for the restaurants collection.
+Server is written by Care We Are (FYP Group):
+Tso Tik Sum Dickson
+Lai Chaau Long Paul
+Wong Wai Kin Sam
 
 ### Functional Requirements
 1. Create user accounts
