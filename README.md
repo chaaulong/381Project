@@ -1,22 +1,31 @@
 # COMPS381F Project
-This is an Express server that provides basic CRUD services for the restaurants collection.
-Server is written by Care We Are (FYP Group):
-Tso Tik Sum Dickson
-Lai Chaau Long Paul
-Wong Wai Kin Sam
+This is an Express server that provides basic CRUD services for the restaurants collection. <br>
+Server is written by Care We Are (FYP Group): <br>
+<ul>
+	<li>Tso Tik Sum Dickson</li>
+	<li>Lai Chaau Long Paul</li>
+	<li>Wong Wai Kin Sam</li>
+</ul>
 
 ### Functional Requirements
-1. Create user accounts
-		• Each user account has a userid and password.
-		• Upon successful login, userid must be stored in cookie session
-2. Create new restaurant documents
-		• Restaurant documents may contain the following attributes:
-			i. restaurant_id
-			ii. name
-			iii. borough
-			iv. cuisine
-			v. photo
-			vi. photo mimetype
+<ol>
+	<li>
+	Create user accounts
+	<ul>
+		<li>Each user account has a userid and password.</li>
+		<li>Upon successful login, userid must be stored in cookie session.</li>
+	</ul>
+	</li>
+	<li>
+	Create new restaurant documents
+	<ol>
+	Restaurant documents may contain the following attributes:
+		<li>restaurant_id</li>
+		<li>name</li>
+		<li>borough</li>
+		<li>cuisine</li>
+		<li>photo</li>
+		<li>photo mimetype</li>
 			vii. address
 				1. street
 				2. building
@@ -26,7 +35,9 @@ Wong Wai Kin Sam
 				1. user
 				2. score
 			ix. owner
+	</ol>
 		• name and owner are mandatory; other attributes are optional
+	</li>
 3. Update restaurant documents
 		• A document can only be updated by its owner (i.e. the user who created the document)
 4. Rate restaurant. A restaurant can only be rated once by the same user.
@@ -38,6 +49,7 @@ Wong Wai Kin Sam
 		• A document can only be deleted by its owner
 7. Search
 		• by name, borough, cuisine or borough.
+			</ol>
 
 ### Installing
 ```
