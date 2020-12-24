@@ -41,7 +41,7 @@ npm install
 ```
 ### Running
 ```
-node server.js
+npm start
 ```
 ### Testing
 Go to http://localhost:8099
