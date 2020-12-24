@@ -2,7 +2,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="refresh" content="3;url=/" />
   <meta name="description" content="Main">
   <meta name="author" content="Care We Are">
 
@@ -57,10 +56,36 @@
     <div class="row">
       <div class="col-lg-12 text-center">
         <h1 class="mt-5"><%= message %></h1>
-        <h2>Redirecting in 3 seconds...</h2>
+        <h2>Redirecting in <span id="counter">3</span> second(s)...</h2>
       </div>
     </div>
   </div>
+
+<script type="text/javascript">
+  var counter = 3; // seconds for HTML
+  var foo; // variable for clearInterval() function
+
+  function redirect() {
+    document.location.href = '/';
+  }
+
+  function updateSecs() {
+    document.getElementById("counter").innerHTML = counter;
+    counter--;
+    if (counter == -1) {
+        clearInterval(foo);
+        redirect();
+    }
+  }
+
+  function countdownTimer() {
+    foo = setInterval(function () {
+        updateSecs()
+    }, 1000);
+  }
+
+  countdownTimer();
+</script>
 
 <style>
 input{
