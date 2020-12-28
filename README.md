@@ -10,46 +10,76 @@ Server is written by Care We Are (FYP Group): <br>
 ### Functional Requirements
 <ol>
 	<li>
-	Create user accounts
-	<ul>
-		<li>Each user account has a userid and password.</li>
-		<li>Upon successful login, userid must be stored in cookie session.</li>
-	</ul>
+		Create user accounts
+		<ul>
+			<li>Each user account has a userid and password.</li>
+			<li>Upon successful login, userid must be stored in cookie session.</li>
+		</ul>
 	</li>
 	<li>
-	Create new restaurant documents
-	<ol>
-	Restaurant documents may contain the following attributes:
-		<li>restaurant_id</li>
-		<li>name</li>
-		<li>borough</li>
-		<li>cuisine</li>
-		<li>photo</li>
-		<li>photo mimetype</li>
-			vii. address
-				1. street
-				2. building
-				3. zipcode
-				4. coord
-			viii. grades
-				1. user
-				2. score
-			ix. owner
-	</ol>
-		• name and owner are mandatory; other attributes are optional
+		Create new restaurant documents
+		<ul>
+			<li>
+				Restaurant documents may contain the following attributes:
+				<ol>
+					<li>restaurant_id</li>
+					<li>name</li>
+					<li>borough</li>
+					<li>cuisine</li>
+					<li>photo</li>
+					<li>photo mimetype</li>
+					<li>
+						<ol>address
+							<li>street</li>
+							<li>building</li>
+							<li>zipcode</li>
+							<li>coord</li>
+						</ol>
+					</li>
+					<li>
+						<ol>grades
+							<li>user</li>
+							<li>score</li>
+						</ol>
+					</li>
+					<li>owner</li>
+				</ol>
+			</li>
+			<li>name and owner are mandatory; other attributes are optional</li>
+		</ul>
 	</li>
-3. Update restaurant documents
-		• A document can only be updated by its owner (i.e. the user who created the document)
-4. Rate restaurant. A restaurant can only be rated once by the same user.
-		• score > 0 and score <= 10
-5. Display restaurant documents
-		• Show photo if it's available
-		• Show a link to Leaflet if coord is available
-6. Delete restaurant documents
-		• A document can only be deleted by its owner
-7. Search
-		• by name, borough, cuisine or borough.
-			</ol>
+	<li>
+		Update restaurant documents
+		<ul>
+			<li>A document can only be updated by its owner (i.e. the user who created the document)</li>
+		</ul>
+	</li>
+	<li>
+		Rate restaurant. A restaurant can only be rated once by the same user.
+		<ul>
+			<li>score > 0 and score <= 10</li>
+		</ul>
+	</li>
+	<li>
+		Display restaurant documents
+		<ul>
+			<li>Show photo if it's available</li>
+			<li>Show a link to Leaflet if coord is available</li>
+		</ul>
+	</li>
+	<li>
+		Delete restaurant documents
+		<ul>
+			<li>A document can only be deleted by its owner</li>
+		</ul>
+	</li>
+	<li>
+		Search
+		<ul>
+			<li>by name, borough, cuisine or borough.</li>
+		</ul>
+	</li>
+</ol>
 
 ### Installing
 ```
