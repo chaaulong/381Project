@@ -7,6 +7,15 @@ Server is written by Care We Are (FYP Group): <br>
 	<li>Wong Wai Kin Sam</li>
 </ul>
 
+### Features
+<ul>
+	<li>Show photo & map only when they are existed</li>
+	<li>Edit & Delete function only available when the user is the owner</li>
+	<li>Rate function only available when the user did not rate before</li>
+	<li>Auto redirect to Home page when there is a message page</li>
+	<li>Search by Name, Borough & Cuisine</li>
+</ul>
+
 ### Functional Requirements
 <ol>
 	<li>
